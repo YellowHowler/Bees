@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: HiveBG
+    uniqueID: 705096271
+    locked: 0
+  - name: BuyHoneyComb
+    uniqueID: 1751797159
+    locked: 0
+  - name: HoneyComb
+    uniqueID: 2799264257
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
