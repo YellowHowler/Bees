@@ -45,7 +45,7 @@ public class CameraManager : MonoBehaviour
 
         bgZeroPos = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0));
 
-        offSetX = -2.5f;
+        offSetX = -1.5f;
         offSetY = -1f;
     }
     void Start()

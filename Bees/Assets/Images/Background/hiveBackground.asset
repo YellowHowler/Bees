@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: hiveBackground
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 3020185538303007805, guid: 850779b77f5b942d79edf87a6bb41460, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9056604, g: 0.8201037, b: 0.72196513, a: 1}
   m_Transform:
     e00: 1
     e01: 0

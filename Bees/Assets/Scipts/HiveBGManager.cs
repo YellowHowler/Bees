@@ -20,7 +20,7 @@ public class HiveBGManager : MonoBehaviour
     void Awake()
     {
         HoneycombManager hiveSC = honeycombObj.GetComponent<HoneycombManager>();
-        excessTileNum = 5;
+        excessTileNum = 6;
         hiveCol = hiveSC.getHiveCol();
         hcNum = hiveSC.getHoneycombNum();
         hiveRow = hcNum / hiveCol + 1;

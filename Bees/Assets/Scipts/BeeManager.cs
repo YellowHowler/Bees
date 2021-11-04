@@ -19,6 +19,8 @@ public class BeeManager : MonoBehaviour
 
     void move(Vector3 endPos)
     {
+        if(endPos.x > transform.position.x) transform.localRotation = Quaternion.Euler(0, 180, 0);
+        else transform.localRotation = Quaternion.Euler(0, 0, 0);
         transform.position = Vector3.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
     }
 }
