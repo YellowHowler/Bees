@@ -22,6 +22,16 @@ public class StorageManager : MonoBehaviour
 
     private string[] multipliers;
 
+    public float getHoney(){return honey;}
+    public float getNectar(){return nectar;} 
+    public float getPollen(){return pollen;}
+    public float getWax(){return wax;}
+
+    public void setHoney(float newValue) {honey = newValue;}
+    public void setNectar(float newValue) {nectar = newValue;}
+    public void setPollen(float newValue) {pollen = newValue;}
+    public void setWax(float newValue) {wax = newValue;}
+
     void Awake()
     {
         multipliers = new string[]{"", "K", "M", "B", "T"};

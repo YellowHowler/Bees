@@ -7,23 +7,27 @@ using UnityEditor;
 
 public class HoneycombManager : MonoBehaviour
 {
-    [SerializeField] private int hiveCol;
     [SerializeField] Tilemap hiveGrid;
     [SerializeField] Tilemap buyGrid;
+    [SerializeField] Tilemap BGGrid;
     [SerializeField] Tile[] hcTile;
     [SerializeField] Tile buyTile;
     [SerializeField] Tile buyTileEmpty;
     [SerializeField] GameObject HCPriceObj;
+    [SerializeField] GameObject HCPriceTxtObj;
     [SerializeField] GameObject StorageManager;
 
     BuyHoneycombText HCPriceTxt;
     StorageManager SMScript;
+    
 
     Camera camera;
 
-    private int[] honeyStorage;
+    private List<int[]> hcPos;
 
-    private int honeycombNum = 10;
+    private List<int> honeyStorage;
+
+    private int honeycombNum = 0;
     private int HCPrice;
 
     private Vector2 mousePos;
@@ -31,6 +35,12 @@ public class HoneycombManager : MonoBehaviour
     private Vector3 tempPos;
     private Vector3Int mouseTilePos;
     private Vector3Int buyGridPos;
+    private Vector3Int buyGridPastPos;
+
+    private int left;
+    private int right;
+    private int up;
+    private int down;
 
     private float honey;
     private float nectar;
@@ -44,19 +54,44 @@ public class HoneycombManager : MonoBehaviour
 
     private string HCPriceStr;
 
-    public int getHiveCol(){ return hiveCol; }
+    public int getLeft(){ return left; }
+    public int getRight(){ return right; }
+    public int getUp(){ return up; }
+    public int getDown(){ return down; }
     public int getHoneycombNum(){ return honeycombNum; }
+    
+    private void getStorage()
+    {
+        honey = SMScript.getHoney();
+        nectar = SMScript.getNectar();
+        pollen = SMScript.getPollen();
+        wax = SMScript.getWax();
+    }
 
     void Awake()
     {
         HCPriceStr = "100";
-        HCPriceTxt = HCPriceObj.GetComponent<BuyHoneycombText>();
+        HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
         SMScript = StorageManager.GetComponent<StorageManager>();
 
-        honeyStorage = new int[honeycombNum];
-        for(int i = 0; i < honeycombNum; i++) honeyStorage[i] = 0;
+        hcPos = new List<int[]>();
+        honeyStorage = new List<int>();
 
         camera = Camera.main;
+
+        getStorage();
+
+        honeycombNum = 5;
+        for(int i = 0; i < honeycombNum; i++)
+        {
+            hcPos.Add(new int[]{i, 0});
+            honeyStorage.Add(0);
+        }
+
+        left = 0;
+        right = 5;
+        up = 0;
+        down = 0;
 
         setupHC();
     }
@@ -73,19 +108,39 @@ public class HoneycombManager : MonoBehaviour
         mouseTilePos = hiveGrid.WorldToCell(mouseWorldPos);
         mouseTilePos = new Vector3Int(mouseTilePos.x, mouseTilePos.y, 0);
 
-        if(mouseTilePos.Equals(buyGridPos))
+        // if(mouseTilePos.Equals(buyGridPos))
+        // {
+        //     buyGrid.SetTile(buyGridPos, buyTileEmpty);
+        //     tempPos = camera.WorldToScreenPoint(hiveGrid.GetCellCenterWorld(mouseTilePos));
+        //     HCPriceObj.transform.position = new Vector3(tempPos.x, tempPos.y + 30, 0);
+        //     HCPriceTxt.setPriceText(HCPriceStr);
+        //     HCPriceObj.SetActive(true);
+        // }
+        // else
+        // {
+        //     buyGrid.SetTile(buyGridPos, null);
+        //     HCPriceObj.SetActive(false);
+        // }
+
+        buyGrid.SetTile(buyGridPastPos, null);
+        
+        if(!hiveGrid.HasTile(mouseTilePos))
         {
-            buyGrid.SetTile(buyGridPos, buyTile);
-            tempPos = camera.WorldToScreenPoint(hiveGrid.GetCellCenterWorld(mouseTilePos));
-            HCPriceObj.transform.position = new Vector3(tempPos.x - 60, tempPos.y, 0);
-            HCPriceTxt.setPriceText(HCPriceStr);
-            HCPriceObj.SetActive(true);
+            if(BGGrid.HasTile(mouseTilePos))
+            {
+                buyGrid.SetTile(mouseTilePos, buyTileEmpty);
+                tempPos = hiveGrid.GetCellCenterWorld(mouseTilePos);
+                HCPriceObj.transform.position = new Vector3(tempPos.x, tempPos.y, 0);
+                HCPriceTxt.setPriceText(HCPriceStr);
+                HCPriceObj.SetActive(true);
+            }
         }
         else
         {
-            buyGrid.SetTile(buyGridPos, buyTileEmpty);
             HCPriceObj.SetActive(false);
         }
+
+        buyGridPastPos = mouseTilePos;
 
         if(Input.GetMouseButtonDown(0))
         {
@@ -95,23 +150,38 @@ public class HoneycombManager : MonoBehaviour
             {
                 Debug.Log("has tile");
             }
+            else
+            {
+                buyHC();
+            }
+        }
+    }
+
+    void buyHC()
+    {
+        if(wax >= HCPrice)
+        {
+            
         }
     }
 
     void setupHC()
     {
+        // for(int i = 0; i < honeycombNum; i++)
+        // {
+        //     hiveGrid.SetTile(new Vector3Int(i % hiveCol, i / hiveCol, 0), hcTile[honeyStorage[i]]);
+        // }
+
+        // buyGridPos = new Vector3Int(honeycombNum % hiveCol, honeycombNum / hiveCol, 0);
+
         for(int i = 0; i < honeycombNum; i++)
         {
-            hiveGrid.SetTile(new Vector3Int(i % hiveCol, i / hiveCol, 0), hcTile[honeyStorage[i]]);
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[honeyStorage[i]]);
         }
-
-        buyGridPos = new Vector3Int(honeycombNum % hiveCol, honeycombNum / hiveCol, 0);
-
-        buyGrid.SetTile(buyGridPos, buyTileEmpty);
     }
 
-    public Vector3 GetBuyGridPos()
-    {
-        return buyGridPos;
-    }
+    // public Vector3 GetBuyGridPos()
+    // {
+    //     return buyGridPos;
+    // }
 }

@@ -14,7 +14,7 @@ public class BeeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        move(new Vector3(5, 5, 0));
+        move(new Vector3(3, 3, 0));
     }
 
     void move(Vector3 endPos)
