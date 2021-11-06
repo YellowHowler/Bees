@@ -38,14 +38,14 @@ public class CameraManager : MonoBehaviour
     {
         camera = Camera.main;
         currentAspect = (float) Screen.width / (float) Screen.height;
-        cameraSize = horizontalResolution / currentAspect / (350);
+        cameraSize = horizontalResolution / (350);
         camera.orthographicSize = cameraSize;
 
         hiveSC = honeycombObj.GetComponent<HoneycombManager>();
     }
-    void Start()
+
+    public void setBound()
     {
-        hcNum = hiveSC.getHoneycombNum();
         left = hiveSC.getLeft();
         right = hiveSC.getRight();
         up = hiveSC.getUp();
@@ -54,12 +54,19 @@ public class CameraManager : MonoBehaviour
         leftBound = BGGrid.GetCellCenterWorld(new Vector3Int(left, 0, 0)).x;
         rightBound = BGGrid.GetCellCenterWorld(new Vector3Int(right, 0, 0)).x;
         upBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, up, 0)).y;
-        upBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, down, 0)).y;
+        downBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0)).y;
+    }
+
+    void Start()
+    {
+        hcNum = hiveSC.getHoneycombNum();
+        
+        setBound();
 
         bgZeroPos = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0));
 
-        offSetX = -1.5f;
-        offSetY = -1f;
+        offSetX = -2f;
+        offSetY = 0f;
 
         camera.transform.position = BGGrid.GetCellCenterWorld(new Vector3Int(2, 0, 0));
         camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, -10);
@@ -68,19 +75,19 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {                             
-        if ( Input.mousePosition.x >= Screen.width * 0.98 && camera.transform.position.x < rightBound + offSetX)
+        if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBound + offSetX)
         {
             camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
         }
-        else if ( Input.mousePosition.x <= Screen.width * 0.02 && camera.transform.position.x > leftBound * offSetX)
+        else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBound - offSetX)
         {
             camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
         }
-        if ( Input.mousePosition.y >= Screen.height * 0.98 && camera.transform.position.y < upBound + offSetY)
+        if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBound + offSetY)
         {
             camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
         }
-        else if ( Input.mousePosition.y <= Screen.height * 0.02 && camera.transform.position.y > downBound * offSetY)
+        else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBound - offSetY)
         {
             camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
         }

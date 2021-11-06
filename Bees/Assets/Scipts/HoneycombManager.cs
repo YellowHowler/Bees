@@ -16,10 +16,17 @@ public class HoneycombManager : MonoBehaviour
     [SerializeField] GameObject HCPriceObj;
     [SerializeField] GameObject HCPriceTxtObj;
     [SerializeField] GameObject StorageManager;
+    [SerializeField] GameObject InputManager;
+    [SerializeField] GameObject BGManager;
+    [SerializeField] GameObject CameraManager;
 
     BuyHoneycombText HCPriceTxt;
     StorageManager SMScript;
-    
+    InputManager IPScript;
+    HiveBGManager BGScript;
+    CameraManager CMScript;
+
+    private Vector3Int mouseTilePos;
 
     Camera camera;
 
@@ -28,14 +35,8 @@ public class HoneycombManager : MonoBehaviour
     private List<int> honeyStorage;
 
     private int honeycombNum = 0;
-    private int HCPrice;
-
-    private Vector2 mousePos;
-    private Vector3 mouseWorldPos;
-    private Vector3 tempPos;
-    private Vector3Int mouseTilePos;
-    private Vector3Int buyGridPos;
-    private Vector3Int buyGridPastPos;
+    private float HCPrice = 50;
+    private int HCPriceM = 0;
 
     private int left;
     private int right;
@@ -66,13 +67,23 @@ public class HoneycombManager : MonoBehaviour
         nectar = SMScript.getNectar();
         pollen = SMScript.getPollen();
         wax = SMScript.getWax();
+
+        honeyM = SMScript.getHoneyM();
+        nectarM = SMScript.getNectarM();
+        pollenM = SMScript.getPollenM();
+        waxM = SMScript.getWaxM();
     }
+
+    public float getHCPrice() { return HCPrice; }
+    public int getHCPriceM() { return HCPriceM; }
 
     void Awake()
     {
-        HCPriceStr = "100";
         HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
         SMScript = StorageManager.GetComponent<StorageManager>();
+        IPScript = InputManager.GetComponent<InputManager>();
+        BGScript = BGManager.GetComponent<HiveBGManager>();
+        CMScript = CameraManager.GetComponent<CameraManager>();
 
         hcPos = new List<int[]>();
         honeyStorage = new List<int>();
@@ -89,7 +100,7 @@ public class HoneycombManager : MonoBehaviour
         }
 
         left = 0;
-        right = 5;
+        right = 6;
         up = 0;
         down = 0;
 
@@ -103,65 +114,36 @@ public class HoneycombManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mousePos = Input.mousePosition;
-        mouseWorldPos = camera.ScreenToWorldPoint(mousePos);
-        mouseTilePos = hiveGrid.WorldToCell(mouseWorldPos);
-        mouseTilePos = new Vector3Int(mouseTilePos.x, mouseTilePos.y, 0);
-
-        // if(mouseTilePos.Equals(buyGridPos))
-        // {
-        //     buyGrid.SetTile(buyGridPos, buyTileEmpty);
-        //     tempPos = camera.WorldToScreenPoint(hiveGrid.GetCellCenterWorld(mouseTilePos));
-        //     HCPriceObj.transform.position = new Vector3(tempPos.x, tempPos.y + 30, 0);
-        //     HCPriceTxt.setPriceText(HCPriceStr);
-        //     HCPriceObj.SetActive(true);
-        // }
-        // else
-        // {
-        //     buyGrid.SetTile(buyGridPos, null);
-        //     HCPriceObj.SetActive(false);
-        // }
-
-        buyGrid.SetTile(buyGridPastPos, null);
-        
-        if(!hiveGrid.HasTile(mouseTilePos))
-        {
-            if(BGGrid.HasTile(mouseTilePos))
-            {
-                buyGrid.SetTile(mouseTilePos, buyTileEmpty);
-                tempPos = hiveGrid.GetCellCenterWorld(mouseTilePos);
-                HCPriceObj.transform.position = new Vector3(tempPos.x, tempPos.y, 0);
-                HCPriceTxt.setPriceText(HCPriceStr);
-                HCPriceObj.SetActive(true);
-            }
-        }
-        else
-        {
-            HCPriceObj.SetActive(false);
-        }
-
-        buyGridPastPos = mouseTilePos;
-
-        if(Input.GetMouseButtonDown(0))
-        {
-            Debug.Log(mouseTilePos);
-
-            if(hiveGrid.HasTile(mouseTilePos))
-            {
-                Debug.Log("has tile");
-            }
-            else
-            {
-                buyHC();
-            }
-        }
+        mouseTilePos = IPScript.getMouseTilePos();
     }
 
-    void buyHC()
+    public void buyHC()
     {
-        if(wax >= HCPrice)
+        getStorage();
+
+        if(waxM > HCPriceM || (wax >= HCPrice && waxM == HCPriceM))
         {
-            
+            Debug.Log("buy");
+
+            hcPos.Add(new int[]{mouseTilePos.x, mouseTilePos.y});
+            honeyStorage.Add(0);
+            honeycombNum++;
+
+            BGScript.setupBG();
+
+            if(mouseTilePos.x < left) left = mouseTilePos.x;
+            else if(mouseTilePos.x > right) right = mouseTilePos.x;
+            if(mouseTilePos.y < down) down = mouseTilePos.y;
+            else if(mouseTilePos.y > up) up = mouseTilePos.y;
+
+            Debug.Log(right + " " + left + " " + up + " " + down);
+
+            BGScript.GetDirection();
+            BGScript.setupBG();
+            CMScript.setBound();
+
+            //SMScript.setWax();
+            setupHC();
         }
     }
 
