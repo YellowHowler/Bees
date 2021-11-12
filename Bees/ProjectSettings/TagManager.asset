@@ -41,6 +41,9 @@ TagManager:
   - name: Exit
     uniqueID: 3219611971
     locked: 0
+  - name: Sky
+    uniqueID: 1030122187
+    locked: 0
   - name: HiveBG
     uniqueID: 705096271
     locked: 0
@@ -53,6 +56,9 @@ TagManager:
   - name: HCPrice
     uniqueID: 1285608769
     locked: 0
+  - name: Flower
+    uniqueID: 1805057929
+    locked: 0
   - name: Floor
     uniqueID: 3601561563
     locked: 0
@@ -64,4 +70,7 @@ TagManager:
     locked: 0
   - name: Bee
     uniqueID: 3886803069
+    locked: 0
+  - name: Transition
+    uniqueID: 259387441
     locked: 0

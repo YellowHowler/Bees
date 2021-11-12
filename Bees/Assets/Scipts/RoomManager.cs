@@ -5,6 +5,8 @@ using UnityEngine;
 public class RoomManager : MonoBehaviour
 {
     [SerializeField] GameObject StorageGrid;
+    [SerializeField] GameObject GardenGrid;
+    [SerializeField] GameObject HiveBGGrid;
     [SerializeField] GameObject Transition;
 
     private string currentRoom = "Storage";
@@ -31,10 +33,20 @@ public class RoomManager : MonoBehaviour
         if(name.Equals("Storage"))
         {
             StorageGrid.SetActive(true);
+            HiveBGGrid.SetActive(true);
+            GardenGrid.SetActive(false);
         }
         else if(name.Equals("Machinery"))
         {
             StorageGrid.SetActive(false);
+            HiveBGGrid.SetActive(true);
+            GardenGrid.SetActive(false);
+        }
+        else if(name.Equals("Garden"))
+        {
+            StorageGrid.SetActive(false);
+            HiveBGGrid.SetActive(false);
+            GardenGrid.SetActive(true);
         }
     }
 }

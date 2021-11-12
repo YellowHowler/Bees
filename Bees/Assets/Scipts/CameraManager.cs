@@ -10,9 +10,12 @@ public class CameraManager : MonoBehaviour
     Camera camera;
 
     [SerializeField] Tilemap BGGrid;
+    [SerializeField] Tilemap FlowerGrid;
     [SerializeField] GameObject honeycombObj;
+    [SerializeField] GameObject RoomManager;
 
     HoneycombManager hiveSC;
+    RoomManager RMScript;
 
     private Vector3 bgZeroPos;
 
@@ -29,10 +32,16 @@ public class CameraManager : MonoBehaviour
     float upBound;
     float downBound;
 
+    float leftBoundGarden;
+    float rightBoundGarden;
+
     private int left;
     private int right;
     private int up;
     private int down;
+
+    private int gardenLeft;
+    private int gardenRight;
 
     void Awake()
     {
@@ -42,6 +51,7 @@ public class CameraManager : MonoBehaviour
         camera.orthographicSize = cameraSize;
 
         hiveSC = honeycombObj.GetComponent<HoneycombManager>();
+        RMScript = RoomManager.GetComponent<RoomManager>();
     }
 
     public void setBound()
@@ -55,6 +65,9 @@ public class CameraManager : MonoBehaviour
         rightBound = BGGrid.GetCellCenterWorld(new Vector3Int(right, 0, 0)).x;
         upBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, up, 0)).y;
         downBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0)).y;
+
+        leftBoundGarden = FlowerGrid.GetCellCenterWorld(new Vector3Int(gardenLeft, 0, 0)).x;
+        rightBoundGarden = FlowerGrid.GetCellCenterWorld(new Vector3Int(gardenRight, 0, 0)).x;
     }
 
     void Start()
@@ -74,22 +87,36 @@ public class CameraManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {                             
-        if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBound + offSetX)
+    {   
+        if(RMScript.GetCurrentRoom().Equals("Storage"))
         {
-            camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
-        }
-        else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBound - offSetX)
+            if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBound + offSetX)
+            {
+                camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBound - offSetX)
+            {
+                camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBound + offSetY)
+            {
+                camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBound - offSetY)
+            {
+                camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+        }  
+        else if(RMScript.GetCurrentRoom().Equals("Garden"))
         {
-            camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
-        }
-        if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBound + offSetY)
-        {
-            camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
-        }
-        else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBound - offSetY)
-        {
-            camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
-        }
+            if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBoundGarden + offSetX)
+            {
+                camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBoundGarden - offSetX)
+            {
+                camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+        }   
     } 
 }

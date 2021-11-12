@@ -31,7 +31,6 @@ public class HoneycombManager : MonoBehaviour
     Camera camera;
 
     private List<int[]> hcPos;
-
     private List<int> honeyStorage;
 
     private int honeycombNum = 0;
@@ -93,6 +92,7 @@ public class HoneycombManager : MonoBehaviour
         getStorage();
 
         honeycombNum = 5;
+
         for(int i = 0; i < honeycombNum; i++)
         {
             hcPos.Add(new int[]{i, 0});

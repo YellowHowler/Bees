@@ -59,6 +59,11 @@ public class HiveBGManager : MonoBehaviour
         down = hiveSC.getDown();
     }
 
+    public Vector3 getExitPos()
+    {
+        return BGGrid.GetCellCenterWorld(exitPos[2]);
+    }
+
     void Start()
     {
         GetDirection();
@@ -114,4 +119,6 @@ public class HiveBGManager : MonoBehaviour
             FloorGrid.SetTile(new Vector3Int(i, -4, 0), FloorTile);
         }
     }
+
+    
 }

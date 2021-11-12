@@ -17,6 +17,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] GameObject HCManager;
     [SerializeField] GameObject StorageManager;
     [SerializeField] GameObject RoomManager;
+    [SerializeField] GameObject BuyHCSliderObj;
+    [SerializeField] Slider BuyHCSlider; 
 
     BuyHoneycombText HCPriceTxt;
     HoneycombManager HCScript;
@@ -31,9 +33,13 @@ public class InputManager : MonoBehaviour
     private Vector3 tempPos;
     private Vector3Int buyGridPos;
     private Vector3Int buyGridPastPos;
+    private Vector3Int sliderPos;
 
     private float HCPrice;
     private int HCPriceM;
+
+    private float sliderValue = 0;
+    private float sliderSpeed = 1f;
 
     private string[] multipliers;
 
@@ -42,6 +48,8 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         camera = Camera.main;
+
+        resetSlider();
 
         HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
         HCScript = HCManager.GetComponent<HoneycombManager>();
@@ -86,17 +94,56 @@ public class InputManager : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            Debug.Log(mouseTilePos);
-
             if(hiveGrid.HasTile(mouseTilePos))
             {
-                Debug.Log("has tile");
             }
             else if(BGGrid.HasTile(mouseTilePos))
             {
-                HCScript.buyHC();
+                sliderPos = mouseTilePos;
             }
         }
+
+        if(Input.GetMouseButton(0))
+        {
+            if(hiveGrid.HasTile(mouseTilePos))
+            {
+            }
+            else if(BGGrid.HasTile(mouseTilePos))
+            {
+                if(sliderPos == mouseTilePos)
+                {
+                    if(sliderValue >= 1f)
+                    {
+                        Debug.Log("buy");
+                        HCScript.buyHC();
+                        resetSlider();
+                        BuyHCSliderObj.SetActive(false);
+                    }
+                    else 
+                    {
+                        sliderValue += sliderSpeed * Time.deltaTime;
+                        BuyHCSlider.value = sliderValue;
+                        BuyHCSliderObj.SetActive(true);
+                    }
+                }  
+                else 
+                {
+                    BuyHCSliderObj.SetActive(false);
+                    resetSlider();
+                }
+            }
+        }
+        else
+        {
+            BuyHCSliderObj.SetActive(false);
+            resetSlider();
+        }
+    }
+
+    private void resetSlider()
+    {
+        sliderValue = 0;
+        BuyHCSlider.value = 0;
     }
 
     public Vector3Int getMouseTilePos() { return mouseTilePos; }
