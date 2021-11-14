@@ -20,7 +20,7 @@ public class BeeManager : MonoBehaviour
     private Vector3 destination;
     private Vector3 exitPos;
 
-    private float moveSpeed = 2f;
+    private float moveSpeed = 2.5f;
     private float sliderSpeed = 2f;
 
     private float[] storage;
@@ -112,20 +112,26 @@ public class BeeManager : MonoBehaviour
 
                 Debug.Log("collecting");
                 
-                flowerCollectSliderObj.SetActive(true);
+                if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
             }
             else if(currentDestination == 2 && onFlower > 0)
             {
                 onFlower -= sliderSpeed * Time.deltaTime;
                 flowerCollectSlider.value = 1- (onFlower / flowerTime);
                 
-                flowerCollectSliderObj.SetActive(true);
+                if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
+                else flowerCollectSliderObj.SetActive(false);
             }
             else if(currentDestination == 2 && onFlower <= 0)
             {
                 flowerCollectSliderObj.SetActive(false);
                 currentDestination++;
+                destination = new Vector3(-6.5f, 8f, 0);
                 Debug.Log("done collecting");
+            }
+            else if(currentDestination == 3)
+            {
+                location = "Storage";
             }
         }
     }

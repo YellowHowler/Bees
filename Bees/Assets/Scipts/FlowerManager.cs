@@ -51,6 +51,11 @@ public class FlowerManager : MonoBehaviour
         return flowerFull.IndexOf(false);
     }
 
+    public int getFlowerNum()
+    {
+        return flowers.Count;
+    }
+
     public Vector3 getFlowerPos(int index)
     {
         float xDif = 0f;

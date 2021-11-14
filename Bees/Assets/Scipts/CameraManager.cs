@@ -11,11 +11,14 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] Tilemap BGGrid;
     [SerializeField] Tilemap FlowerGrid;
+    [SerializeField] Tilemap FlowerGridTemp;
     [SerializeField] GameObject honeycombObj;
     [SerializeField] GameObject RoomManager;
+    [SerializeField] GameObject FlowerManager;
 
     HoneycombManager hiveSC;
     RoomManager RMScript;
+    FlowerManager FLScript;
 
     private Vector3 bgZeroPos;
 
@@ -34,6 +37,8 @@ public class CameraManager : MonoBehaviour
 
     float leftBoundGarden;
     float rightBoundGarden;
+    float upBoundGarden;
+    float downBoundGarden;
 
     private int left;
     private int right;
@@ -42,6 +47,8 @@ public class CameraManager : MonoBehaviour
 
     private int gardenLeft;
     private int gardenRight;
+
+    float temp;
 
     void Awake()
     {
@@ -52,6 +59,10 @@ public class CameraManager : MonoBehaviour
 
         hiveSC = honeycombObj.GetComponent<HoneycombManager>();
         RMScript = RoomManager.GetComponent<RoomManager>();
+        FLScript = FlowerManager.GetComponent<FlowerManager>();
+
+        temp = camera.ScreenToWorldPoint(new Vector3((Screen.width - 1400)/2, 0, 0)).x - camera.ScreenToWorldPoint(new Vector3(0, 0, 0)).x;
+        Debug.Log("temp:" + temp);
     }
 
     public void setBound()
@@ -61,13 +72,17 @@ public class CameraManager : MonoBehaviour
         up = hiveSC.getUp();
         down = hiveSC.getDown();
 
+        gardenRight = FLScript.getFlowerNum() * 2;
+
         leftBound = BGGrid.GetCellCenterWorld(new Vector3Int(left, 0, 0)).x;
         rightBound = BGGrid.GetCellCenterWorld(new Vector3Int(right, 0, 0)).x;
         upBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, up, 0)).y;
         downBound = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0)).y;
 
-        leftBoundGarden = FlowerGrid.GetCellCenterWorld(new Vector3Int(gardenLeft, 0, 0)).x;
-        rightBoundGarden = FlowerGrid.GetCellCenterWorld(new Vector3Int(gardenRight, 0, 0)).x;
+        leftBoundGarden = FlowerGridTemp.GetCellCenterWorld(new Vector3Int(-4, 0, 0)).x;
+        rightBoundGarden = FlowerGridTemp.GetCellCenterWorld(new Vector3Int(gardenRight, 0, 0)).x;
+        upBoundGarden = FlowerGridTemp.GetCellCenterWorld(new Vector3Int(0, 5, 0)).y;
+        downBoundGarden = FlowerGridTemp.GetCellCenterWorld(new Vector3Int(0, 0, 0)).y;
     }
 
     void Start()
@@ -75,6 +90,8 @@ public class CameraManager : MonoBehaviour
         hcNum = hiveSC.getHoneycombNum();
         
         setBound();
+
+        Debug.Log(leftBoundGarden);
 
         bgZeroPos = BGGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0));
 
@@ -85,7 +102,7 @@ public class CameraManager : MonoBehaviour
         camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, -10);
     }
 
-    // Update is called once per frame
+    public float getTemp() {return leftBoundGarden - offSetX - 0.65f + temp;}
     void Update()
     {   
         if(RMScript.GetCurrentRoom().Equals("Storage"))
@@ -109,13 +126,22 @@ public class CameraManager : MonoBehaviour
         }  
         else if(RMScript.GetCurrentRoom().Equals("Garden"))
         {
-            if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBoundGarden + offSetX)
+            if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBoundGarden + offSetX - 1f)
             {
                 camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
             }
-            else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBoundGarden - offSetX)
+            else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBoundGarden - offSetX - 0.65f + temp)
             {
+                Debug.Log("left");
                 camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBoundGarden + offSetY - 0.4f)
+            {
+                camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
+            }
+            else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBoundGarden - offSetY)
+            {
+                camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
             }
         }   
     } 
