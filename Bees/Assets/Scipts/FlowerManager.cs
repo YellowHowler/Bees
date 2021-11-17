@@ -15,8 +15,10 @@ public class FlowerManager : MonoBehaviour
     private List<bool> flowerFull;
 
     [SerializeField] private string[] flowerNames;
-    [SerializeField] private ulong[] flowerNectar;
-    [SerializeField] private ulong[] flowerPollen;
+    [SerializeField] private float[] flowerNectar;
+    [SerializeField] private int[] flowerNectarM;
+    [SerializeField] private float[] flowerPollen;
+    [SerializeField] private int[] flowerPollenM;
 
     private int totalFlower = 2;
     private int left;
@@ -51,13 +53,21 @@ public class FlowerManager : MonoBehaviour
         return flowerFull.IndexOf(false);
     }
 
-    public ulong getFlowerNectar(int index)
+    public float getFlowerNectar(int index)
     {
         return flowerNectar[flowers[index]];
     }
-    public ulong getFlowerPollen(int index)
+    public int getFlowerNectarM(int index)
     {
-        return flowerNectar[flowers[index]];
+        return flowerNectarM[flowers[index]];
+    }
+    public float getFlowerPollen(int index)
+    {
+        return flowerPollen[flowers[index]];
+    }
+    public int getFlowerPollenM(int index)
+    {
+        return flowerPollenM[flowers[index]];
     }
 
     public int getFlowerNum()

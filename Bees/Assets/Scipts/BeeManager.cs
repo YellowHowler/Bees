@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class BeeManager : MonoBehaviour
 {
     [SerializeField] GameObject RoomManager;
     [SerializeField] GameObject beeObj;
+    [SerializeField] GameObject HiveManager;
     [SerializeField] GameObject HiveBGManager;
     [SerializeField] GameObject FlowerManager;
     [SerializeField] GameObject flowerCollectSliderObj;
@@ -14,6 +16,7 @@ public class BeeManager : MonoBehaviour
     RoomManager RMScript;
     HiveBGManager HVBGScript;
     FlowerManager FLScript;
+    HoneycombManager HCScript;
     
     Renderer rd;
 
@@ -27,7 +30,8 @@ public class BeeManager : MonoBehaviour
     private int[] storageM;
     //honey, nectar, pollen, wax
 
-    private int flower = 0;
+    private int flower = -1;
+    private int honeycomb = -1;
 
     private string currentRoom;
     private string location = "Storage";
@@ -46,9 +50,12 @@ public class BeeManager : MonoBehaviour
         RMScript = RoomManager.GetComponent<RoomManager>();
         HVBGScript = HiveBGManager.GetComponent<HiveBGManager>();
         FLScript = FlowerManager.GetComponent<FlowerManager>();
+        HCScript = HiveManager.GetComponent<HoneycombManager>();
 
         storage = new float[]{0f, 0f, 0f, 0f};
         storageM = new int[]{0, 0, 0, 0};
+
+        //honey, nectar, pollen, wax
 
         location = "Storage";
     }
@@ -131,13 +138,36 @@ public class BeeManager : MonoBehaviour
                     destination = new Vector3(-6.5f, 8f, 0);
                     Debug.Log("done collecting");
 
-                    
+                    storage[1] += FLScript.getFlowerNectar(flower) * (float)Math.Pow(10.0f, (storageM[1] - FLScript.getFlowerNectarM(flower)) * -3);
+                    if(storage[1] >= 1000)
+                    {
+                        storageM[1]++;
+                        storage[1] /= 1000;
+                    }
+
+                    Debug.Log(storage[1]);
+                    Debug.Log(storageM[1]);
                 }
                 else if(currentDestination == 3)
                 {
-                    location = "Storage";
-                    transform.position = HVBGScript.getExitPos();
-                    currentDestination++;
+                    honeycomb = HCScript.getEmptyHCNectar();
+
+                    if(honeycomb == -1) 
+                    {
+                        job = "idle";
+                    }
+                    else
+                    {
+                        location = "Storage";
+                        transform.position = HVBGScript.getExitPos();
+                        currentDestination++;
+                        destination = HCScript.getHCTilePos(honeycomb);
+                    }  
+                }
+                else if(currentDestination == 4)
+                {
+                    currentDestination = 0;
+                    storage[1] = HCScript.changeNectarStorage(honeycomb, storage[1], storageM[1]);
                 }
             }
         }

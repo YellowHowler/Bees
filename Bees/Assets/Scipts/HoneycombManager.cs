@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,8 +32,10 @@ public class HoneycombManager : MonoBehaviour
     Camera camera;
 
     private List<int[]> hcPos;
-    private List<int> honeyStorage;
-    private List<int> nectarStorage;
+    private List<float> honeyStorage;
+    private List<float> nectarStorage;
+    private List<int> honeyStorageM;
+    private List<int> nectarStorageM;
 
     private int honeycombNum = 0;
     private float HCPrice = 50;
@@ -53,8 +56,10 @@ public class HoneycombManager : MonoBehaviour
     private int pollenM;
     private int waxM;
 
-    private int honeyCapacity = 150;
-    private int nectarCapacity = 150;
+    private float honeyCapacity = 150;
+    private int honeyCapacityM = 0;
+    private float nectarCapacity = 150;
+    private int nectarCapacityM = 0;
 
     private string HCPriceStr;
 
@@ -89,7 +94,10 @@ public class HoneycombManager : MonoBehaviour
         CMScript = CameraManager.GetComponent<CameraManager>();
 
         hcPos = new List<int[]>();
-        honeyStorage = new List<int>();
+        honeyStorage = new List<float>();
+        honeyStorageM = new List<int>();
+        nectarStorage = new List<float>();
+        nectarStorageM = new List<int>();
 
         camera = Camera.main;
 
@@ -101,6 +109,9 @@ public class HoneycombManager : MonoBehaviour
         {
             hcPos.Add(new int[]{i, 0});
             honeyStorage.Add(0);
+            nectarStorage.Add(0);
+            honeyStorageM.Add(0);
+            nectarStorageM.Add(0);
         }
 
         left = 0;
@@ -121,6 +132,11 @@ public class HoneycombManager : MonoBehaviour
         mouseTilePos = IPScript.getMouseTilePos();
     }
 
+    public void setNectarStorage(int index)
+    {
+        
+    }
+
     public int getEmptyHCNectar()
     {
         for(int i = 0; i < honeycombNum; i++)
@@ -131,6 +147,11 @@ public class HoneycombManager : MonoBehaviour
             }
         }
         return -1;
+    }
+
+    public Vector3 getHCTilePos(int index)
+    {
+        return hiveGrid.GetCellCenterWorld(new Vector3Int(hcPos[index][0], hcPos[index][1], 0));
     }
 
     public void buyHC()
@@ -163,18 +184,48 @@ public class HoneycombManager : MonoBehaviour
         }
     }
 
+    public float changeNectarStorage(int index, float nectar, int nectarM)
+    {
+        nectarStorage[index] += nectar * (float)Math.Pow(1000, -(nectarStorageM[index] + nectarM));
+        if(nectarStorage[index] > 1000)
+        {
+            nectarStorage[index] /= 1000;
+            nectarStorageM[index]++;
+        }
+
+        if(nectarCapacityM < nectarStorageM[index] || (nectarCapacityM == nectarStorageM[index] && nectarCapacity < nectarStorage[index]))
+        {
+            float returnValue = (nectarStorage[index] - nectarCapacity * (float)Math.Pow(1000, -nectarCapacityM + nectarStorageM[index])) * (float)Math.Pow(1000, nectarStorageM[index] - nectarM);
+
+            nectarStorage[index] = nectarCapacity;
+            nectarStorageM[index] = nectarCapacityM;
+
+            drawTile(index);
+
+            return returnValue;
+        }
+
+        drawTile(index);
+        return 0;
+    }
+
+    void drawTile(int i)
+    {
+        int tileNum;
+        if(honeyStorage[i] > 0)
+            tileNum = (int)((honeyStorage[i]) / (honeyCapacity) * (float)Math.Pow(1000, honeyStorageM[i] - honeyCapacityM) * (hcTile.Length - 1));
+        else if(nectarStorage[i] > 0)
+            tileNum = (int)((nectarStorage[i]) / (nectarCapacity) * (float)Math.Pow(1000, nectarStorageM[i] - nectarCapacityM) * (hcTile.Length - 1));
+        else
+            tileNum = 0;
+        hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[tileNum]);
+    }
+
     void setupHC()
     {
-        // for(int i = 0; i < honeycombNum; i++)
-        // {
-        //     hiveGrid.SetTile(new Vector3Int(i % hiveCol, i / hiveCol, 0), hcTile[honeyStorage[i]]);
-        // }
-
-        // buyGridPos = new Vector3Int(honeycombNum % hiveCol, honeycombNum / hiveCol, 0);
-
         for(int i = 0; i < honeycombNum; i++)
         {
-            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[(honeyStorage[i] / (honeyCapacity / (hcTile.Length - 1)))]);
+            drawTile(i);
         }
     }
 
