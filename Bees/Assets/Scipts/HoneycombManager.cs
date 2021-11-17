@@ -32,6 +32,7 @@ public class HoneycombManager : MonoBehaviour
 
     private List<int[]> hcPos;
     private List<int> honeyStorage;
+    private List<int> nectarStorage;
 
     private int honeycombNum = 0;
     private float HCPrice = 50;
@@ -51,6 +52,9 @@ public class HoneycombManager : MonoBehaviour
     private int nectarM;
     private int pollenM;
     private int waxM;
+
+    private int honeyCapacity = 150;
+    private int nectarCapacity = 150;
 
     private string HCPriceStr;
 
@@ -117,6 +121,18 @@ public class HoneycombManager : MonoBehaviour
         mouseTilePos = IPScript.getMouseTilePos();
     }
 
+    public int getEmptyHCNectar()
+    {
+        for(int i = 0; i < honeycombNum; i++)
+        {
+            if(honeyStorage[i] == 0 && nectarStorage[i] < nectarCapacity)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void buyHC()
     {
         getStorage();
@@ -158,7 +174,7 @@ public class HoneycombManager : MonoBehaviour
 
         for(int i = 0; i < honeycombNum; i++)
         {
-            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[honeyStorage[i]]);
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[(honeyStorage[i] / (honeyCapacity / (hcTile.Length - 1)))]);
         }
     }
 

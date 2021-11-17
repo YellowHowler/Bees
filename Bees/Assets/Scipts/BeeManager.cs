@@ -78,60 +78,67 @@ public class BeeManager : MonoBehaviour
 
         hide();
 
-        if(job.Equals("flower") && currentDestination == 0)
-        {
-            destination = HVBGScript.getExitPos();
-        }
-
-        move(destination);
-
-        if(transform.position == destination && job.Equals("flower"))
+        if(job.Equals("flower"))
         {
             if(currentDestination == 0)
             {
-                transform.position = new Vector3(-3, 2, 0);
+                destination = HVBGScript.getExitPos();
+            }
 
-                currentDestination++;
-                location = "Garden";
+            move(destination);
 
-                hide();
-                Debug.Log(location);
-
-                if(flower != -1)
+            if(transform.position == destination)
+            {
+                if(currentDestination == 0)
                 {
-                    destination = FLScript.getFlowerPos(flower);
-                    Debug.Log(flower);
-                    Debug.Log(destination);
-                }  
-            }
-            else if(currentDestination == 1)
-            {
-                currentDestination++;
-                onFlower = flowerTime;
-                resetSlider();
+                    transform.position = new Vector3(-3, 2, 0);
 
-                Debug.Log("collecting");
-                
-                if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
-            }
-            else if(currentDestination == 2 && onFlower > 0)
-            {
-                onFlower -= sliderSpeed * Time.deltaTime;
-                flowerCollectSlider.value = 1- (onFlower / flowerTime);
-                
-                if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
-                else flowerCollectSliderObj.SetActive(false);
-            }
-            else if(currentDestination == 2 && onFlower <= 0)
-            {
-                flowerCollectSliderObj.SetActive(false);
-                currentDestination++;
-                destination = new Vector3(-6.5f, 8f, 0);
-                Debug.Log("done collecting");
-            }
-            else if(currentDestination == 3)
-            {
-                location = "Storage";
+                    currentDestination++;
+                    location = "Garden";
+
+                    hide();
+                    Debug.Log(location);
+
+                    if(flower != -1)
+                    {
+                        destination = FLScript.getFlowerPos(flower);
+                        Debug.Log(flower);
+                        Debug.Log(destination);
+                    }  
+                }
+                else if(currentDestination == 1)
+                {
+                    currentDestination++;
+                    onFlower = flowerTime;
+                    resetSlider();
+
+                    Debug.Log("collecting");
+                    
+                    if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
+                }
+                else if(currentDestination == 2 && onFlower > 0)
+                {
+                    onFlower -= sliderSpeed * Time.deltaTime;
+                    flowerCollectSlider.value = 1- (onFlower / flowerTime);
+                    
+                    if(RMScript.GetCurrentRoom().Equals("Garden")) flowerCollectSliderObj.SetActive(true);
+                    else flowerCollectSliderObj.SetActive(false);
+                }
+                else if(currentDestination == 2 && onFlower <= 0)
+                {
+                    flowerCollectSliderObj.SetActive(false);
+                    currentDestination++;
+                    destination = new Vector3(-6.5f, 8f, 0);
+                    Debug.Log("done collecting");
+
+                    
+                }
+                else if(currentDestination == 3)
+                {
+                    location = "Storage";
+                    transform.position = HVBGScript.getExitPos();
+                    currentDestination++;
+                }
             }
         }
     }
@@ -143,9 +150,14 @@ public class BeeManager : MonoBehaviour
         if(newJob.Equals("flower"))
         {
             flower = FLScript.getIdleFlower();
+
             if(flower != -1)
             {
                 FLScript.setFlowerFull(flower);
+            }
+            else
+            {
+                job = "idle";
             }
         }
     }

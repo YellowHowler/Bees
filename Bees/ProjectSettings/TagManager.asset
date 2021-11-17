@@ -65,6 +65,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: hive
+    uniqueID: 3772322111
+    locked: 0
   - name: ClickIcon
     uniqueID: 547931365
     locked: 0

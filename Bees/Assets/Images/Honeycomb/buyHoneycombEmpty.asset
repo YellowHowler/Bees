@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: buyHoneycombEmpty
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: -5689125450617866222, guid: 0b268b597883744bba91d2e747bc261b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.6604271, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0
