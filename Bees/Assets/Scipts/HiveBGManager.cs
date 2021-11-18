@@ -15,6 +15,7 @@ public class HiveBGManager : MonoBehaviour
     [SerializeField] GameObject mouseClickIcon;
     [SerializeField] GameObject RoomButtons;
     [SerializeField] Tilemap BGGrid;
+    [SerializeField] Tilemap BGGridTemp;
     [SerializeField] Tilemap FloorGrid;
     [SerializeField] Tile BGTile; 
     [SerializeField] Tile FloorTile; 
@@ -61,7 +62,7 @@ public class HiveBGManager : MonoBehaviour
 
     public Vector3 getExitPos()
     {
-        return BGGrid.GetCellCenterWorld(exitPos[2]);
+        return BGGridTemp.GetCellCenterWorld(exitPos[2]);
     }
 
     void Start()

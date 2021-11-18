@@ -368,8 +368,11 @@ MonoBehaviour:
   hiveGrid: {fileID: 1995369182}
   buyGrid: {fileID: 1456966053}
   BGGrid: {fileID: 72668938}
+  HiveGrid: {fileID: 1956766333}
   buyTile: {fileID: 11400000, guid: 2c7b62ad53dc445f4a865cbb472b8d1e, type: 2}
   buyTileEmpty: {fileID: 11400000, guid: c342de4b98c094cb28910eed543211dd, type: 2}
+  HiveTile: {fileID: 11400000, guid: 4b8a3dd17ac5244bd89b32800e1bf2ae, type: 2}
+  HiveTileSelected: {fileID: 11400000, guid: d9671eeff614a485795092abf44ee280, type: 2}
   HCPriceObj: {fileID: 1109990721}
   HCPriceTxtObj: {fileID: 1109990721}
   HCManager: {fileID: 1513854559}
@@ -1867,7 +1870,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.5707547, g: 0.88706, b: 1, a: 1}
+  m_BackGroundColor: {r: 0.15566039, g: 0.74713236, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2791,8 +2794,14 @@ MonoBehaviour:
   flowerNames:
   - cosmos
   - daisy
-  flowerNectar: 
-  flowerPollen: 
+  flowerNectar:
+  - 110
+  - 30
+  flowerNectarM: 0100000000000000
+  flowerPollen:
+  - 0
+  - 0
+  flowerPollenM: 0000000000000000
 --- !u!4 &792304303
 Transform:
   m_ObjectHideFlags: 0
@@ -3013,6 +3022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RoomManager: {fileID: 1542602446}
   beeObj: {fileID: 1967147548}
+  HiveManager: {fileID: 1513854559}
   HiveBGManager: {fileID: 1159176351}
   FlowerManager: {fileID: 792304301}
   flowerCollectSliderObj: {fileID: 1754592542}
@@ -3260,6 +3270,7 @@ MonoBehaviour:
   mouseClickIcon: {fileID: 553720624}
   RoomButtons: {fileID: 11274362}
   BGGrid: {fileID: 72668938}
+  BGGridTemp: {fileID: 1656086378}
   FloorGrid: {fileID: 73741656}
   BGTile: {fileID: 11400000, guid: 56032c2f3b15748fe87377a31e75f019, type: 2}
   FloorTile: {fileID: 11400000, guid: b2f28a6b5e9eb44af84b168b55ac9c81, type: 2}
@@ -4169,19 +4180,20 @@ MonoBehaviour:
   hiveGrid: {fileID: 1995369182}
   buyGrid: {fileID: 1456966053}
   BGGrid: {fileID: 72668938}
+  BGGridTemp: {fileID: 1656086378}
   hcTile:
-  - {fileID: 11400000, guid: f72483ad629b04d44b67d762b762f10f, type: 2}
-  - {fileID: 11400000, guid: fd4c32796b0f74886a9e9a4f04445775, type: 2}
-  - {fileID: 11400000, guid: f48629e344196440b8bdfe2e241ebfab, type: 2}
-  - {fileID: 11400000, guid: 7ef9c17e4cbfa4a7ea8fd9122dd6351f, type: 2}
-  - {fileID: 11400000, guid: abf5b57cdf8a14751917d67530a438b2, type: 2}
-  - {fileID: 11400000, guid: 8b2c8f77b5d7948c0bb15eca5602d762, type: 2}
-  - {fileID: 11400000, guid: 5ec6e5c65c5f04fb5ab105e21aaca6ec, type: 2}
-  - {fileID: 11400000, guid: 954d78aab4e854924b5b861acb06fcc4, type: 2}
-  - {fileID: 11400000, guid: 885531956b278457cb0f102ef6619d60, type: 2}
+  - {fileID: 11400000, guid: c8bc6b221820147729fe0125077b9bb5, type: 2}
+  - {fileID: 11400000, guid: 12f0900220ce74b22a5f9cf7571cf79a, type: 2}
+  - {fileID: 11400000, guid: 3f8757b325dbf49c49d19cb63409efc6, type: 2}
+  - {fileID: 11400000, guid: c3cc80b28f8c0417e8f64e931e28f1ed, type: 2}
+  - {fileID: 11400000, guid: afac47dcd4a914561a54ded914c7f1b0, type: 2}
+  - {fileID: 11400000, guid: 6a8a87cbda05f446691f044bb332c50c, type: 2}
+  - {fileID: 11400000, guid: f7a71077956994d82a995765a42cbbfd, type: 2}
+  - {fileID: 11400000, guid: e332f5ca9590e4a678c391cedba96ac6, type: 2}
+  - {fileID: 11400000, guid: d4ff6328b6067491db1d6b6aca6d5da5, type: 2}
   buyTile: {fileID: 11400000, guid: 2c7b62ad53dc445f4a865cbb472b8d1e, type: 2}
   buyTileEmpty: {fileID: 11400000, guid: c342de4b98c094cb28910eed543211dd, type: 2}
-  HCPriceObj: {fileID: 0}
+  HCPriceObj: {fileID: 1109990721}
   HCPriceTxtObj: {fileID: 1109990721}
   StorageManager: {fileID: 1919902513}
   InputManager: {fileID: 63578275}

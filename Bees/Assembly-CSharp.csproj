@@ -55,12 +55,12 @@
      <Compile Include="Assets\Scipts\CameraManager.cs" />
      <Compile Include="Assets\Scipts\BeeManager.cs" />
      <Compile Include="Assets\Scipts\RoomManager.cs" />
+     <Compile Include="Assets\Scipts\hiveManager.cs" />
      <Compile Include="Assets\Scipts\DontDestroy.cs" />
      <Compile Include="Assets\Scipts\HoneycombManager.cs" />
      <Compile Include="Assets\Scipts\GardenBGManager.cs" />
      <Compile Include="Assets\Scipts\FlowerManager.cs" />
      <Compile Include="Assets\Scipts\StorageManager.cs" />
-     <Compile Include="Assets\Scipts\hiveManager.cs" />
  <Reference Include="UnityEngine">
  <HintPath>/Applications/Unity/Hub/Editor/2020.3.13f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>

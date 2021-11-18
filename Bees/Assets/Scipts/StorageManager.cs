@@ -35,7 +35,11 @@ public class StorageManager : MonoBehaviour
     public void setHoney(float newValue) {honey = newValue;}
     public void setNectar(float newValue) {nectar = newValue;}
     public void setPollen(float newValue) {pollen = newValue;}
-    public void setWax(float newValue) {wax = newValue;}
+    public void setWax(float newValue, int newM) 
+    {
+        wax = newValue;
+        waxM = newM;
+    }
     
     public string[] getMultipliers() { return multipliers; }
 
@@ -46,22 +50,31 @@ public class StorageManager : MonoBehaviour
         honey = 5f;
         nectar = 5f;
         pollen = 5f;
-        wax = 5.2f;
+        wax = 1.3f;
 
         honeyM = 0;
         nectarM = 0;
         pollenM = 0;
-        waxM = 2;
+        waxM = 1;
 
         changeText();
     }
 
-    public void changeText()
+    public void roundStorage()
     {
-        honeyText.text = (honeyM == 0 ? Mathf.RoundToInt(honey) : Mathf.Round(honey * 100.0f) * 0.01f).ToString() + multipliers[honeyM];
-        nectarText.text = (nectarM == 0 ? Mathf.RoundToInt(nectar) : Mathf.Round(nectar * 100.0f) * 0.01f).ToString() + multipliers[nectarM];
-        pollenText.text = (pollenM == 0 ? Mathf.RoundToInt(pollen) : Mathf.Round(pollen * 100.0f) * 0.01f).ToString() + multipliers[pollenM];
-        waxText.text = (waxM == 0 ? Mathf.RoundToInt(wax) : Mathf.Round(wax * 100.0f) * 0.01f).ToString() + multipliers[waxM];
+        honey = honeyM == 0 ? Mathf.RoundToInt(honey) : Mathf.Round(honey * 100.0f) * 0.01f;
+        nectar = nectarM == 0 ? Mathf.RoundToInt(nectar) : Mathf.Round(nectar * 100.0f) * 0.01f;
+        wax = waxM == 0 ? Mathf.RoundToInt(wax) : Mathf.Round(wax * 100.0f) * 0.01f;
+        pollen = pollenM == 0 ? Mathf.RoundToInt(pollen) : Mathf.Round(pollen * 100.0f) * 0.01f;
+    }
+
+    public void changeText()
+    {   
+        roundStorage();
+        honeyText.text = (honey).ToString() + multipliers[honeyM];
+        nectarText.text = (nectar).ToString() + multipliers[nectarM];
+        pollenText.text = (pollen).ToString() + multipliers[pollenM];
+        waxText.text = (wax).ToString() + multipliers[waxM];
     }
 
     void Start()
