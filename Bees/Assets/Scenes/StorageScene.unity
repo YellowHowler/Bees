@@ -2797,7 +2797,7 @@ MonoBehaviour:
   flowerNectar:
   - 110
   - 30
-  flowerNectarM: 0100000000000000
+  flowerNectarM: 0000000000000000
   flowerPollen:
   - 0
   - 0
@@ -3273,7 +3273,7 @@ MonoBehaviour:
   BGGridTemp: {fileID: 1656086378}
   FloorGrid: {fileID: 73741656}
   BGTile: {fileID: 11400000, guid: 56032c2f3b15748fe87377a31e75f019, type: 2}
-  FloorTile: {fileID: 11400000, guid: b2f28a6b5e9eb44af84b168b55ac9c81, type: 2}
+  FloorTile: {fileID: 11400000, guid: 6b81b0f220f944ad384cb833043d48c7, type: 2}
 --- !u!4 &1159176353
 Transform:
   m_ObjectHideFlags: 0
@@ -4191,6 +4191,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f7a71077956994d82a995765a42cbbfd, type: 2}
   - {fileID: 11400000, guid: e332f5ca9590e4a678c391cedba96ac6, type: 2}
   - {fileID: 11400000, guid: d4ff6328b6067491db1d6b6aca6d5da5, type: 2}
+  hcNectarTile:
+  - {fileID: 11400000, guid: d97e7d498a9ec4d319feccb5851940ca, type: 2}
+  - {fileID: 11400000, guid: b0a9052cfca6441ccb602728e7826522, type: 2}
+  - {fileID: 11400000, guid: 6d9615f75f8be4e7d8d15799a8554706, type: 2}
+  - {fileID: 11400000, guid: 5faadeca3231049e59af314d96407017, type: 2}
+  - {fileID: 11400000, guid: 989720a1a1ff74f079263b489fac75a2, type: 2}
+  - {fileID: 11400000, guid: a4e28621acc254c92b5b6bbdd396457d, type: 2}
+  - {fileID: 11400000, guid: c1bbda46ae41646df805bea6fa1e9d66, type: 2}
+  - {fileID: 11400000, guid: 06e543b2db6604137a7ae762ea564bbe, type: 2}
+  - {fileID: 11400000, guid: b7237d65e2eea4a0da9ba7b41340f8ad, type: 2}
   buyTile: {fileID: 11400000, guid: 2c7b62ad53dc445f4a865cbb472b8d1e, type: 2}
   buyTileEmpty: {fileID: 11400000, guid: c342de4b98c094cb28910eed543211dd, type: 2}
   HCPriceObj: {fileID: 1109990721}

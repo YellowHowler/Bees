@@ -13,6 +13,7 @@ public class HoneycombManager : MonoBehaviour
     [SerializeField] Tilemap BGGrid;
     [SerializeField] Tilemap BGGridTemp;
     [SerializeField] Tile[] hcTile;
+    [SerializeField] Tile[] hcNectarTile;
     [SerializeField] Tile buyTile;
     [SerializeField] Tile buyTileEmpty;
     [SerializeField] GameObject HCPriceObj;
@@ -230,12 +231,21 @@ public class HoneycombManager : MonoBehaviour
     {
         int tileNum;
         if(honeyStorage[i] > 0)
+        {
             tileNum = (int)((honeyStorage[i]) / (honeyCapacity) * (float)Math.Pow(1000, honeyStorageM[i] - honeyCapacityM) * (hcTile.Length - 1));
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[tileNum]);
+        }
+            
         else if(nectarStorage[i] > 0)
+        {
             tileNum = (int)((nectarStorage[i]) / (nectarCapacity) * (float)Math.Pow(1000, nectarStorageM[i] - nectarCapacityM) * (hcTile.Length - 1));
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcNectarTile[tileNum]);
+        } 
         else
+        {
             tileNum = 0;
-        hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcTile[tileNum]);
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcNectarTile[tileNum]);
+        }
     }
 
     void setupHC()
