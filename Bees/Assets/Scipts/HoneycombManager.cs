@@ -14,6 +14,7 @@ public class HoneycombManager : MonoBehaviour
     [SerializeField] Tilemap BGGridTemp;
     [SerializeField] Tile[] hcTile;
     [SerializeField] Tile[] hcNectarTile;
+    [SerializeField] Tile[] hcPollenTile;
     [SerializeField] Tile buyTile;
     [SerializeField] Tile buyTileEmpty;
     [SerializeField] GameObject HCPriceObj;
@@ -38,6 +39,8 @@ public class HoneycombManager : MonoBehaviour
     private List<float> nectarStorage;
     private List<int> honeyStorageM;
     private List<int> nectarStorageM;
+    private List<float> pollenStorage;
+    private List<int> pollenStorageM;
 
     private int honeycombNum = 0;
     private float HCPrice = 600;
@@ -58,10 +61,12 @@ public class HoneycombManager : MonoBehaviour
     private int pollenM;
     private int waxM;
 
-    private float honeyCapacity = 150;
-    private int honeyCapacityM = 0;
-    private float nectarCapacity = 150;
-    private int nectarCapacityM = 0;
+    private float honeyCapacity = 5;
+    private int honeyCapacityM = 1;
+    private float nectarCapacity = 5;
+    private int nectarCapacityM = 1;
+    private float pollenCapacity = 50;
+    private int pollenCapacityM = 1;
 
     private string HCPriceStr;
 
@@ -100,6 +105,8 @@ public class HoneycombManager : MonoBehaviour
         honeyStorageM = new List<int>();
         nectarStorage = new List<float>();
         nectarStorageM = new List<int>();
+        pollenStorage = new List<float>();
+        pollenStorageM = new List<int>();
 
         camera = Camera.main;
 
@@ -112,8 +119,10 @@ public class HoneycombManager : MonoBehaviour
             hcPos.Add(new int[]{i, 0});
             honeyStorage.Add(0);
             nectarStorage.Add(0);
+            pollenStorage.Add(0);
             honeyStorageM.Add(0);
             nectarStorageM.Add(0);
+            pollenStorageM.Add(0);
         }
 
         left = 0;
@@ -143,7 +152,20 @@ public class HoneycombManager : MonoBehaviour
     {
         for(int i = 0; i < honeycombNum; i++)
         {
-            if(honeyStorage[i] == 0 && nectarStorage[i] < nectarCapacity)
+            if(honeyStorage[i] == 0 && pollenStorage[i] == 0 && nectarStorage[i] < nectarCapacity)
+            {
+                Debug.Log(i);
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getEmptyHCPollen()
+    {
+        for(int i = 0; i < honeycombNum; i++)
+        {
+            if(honeyStorage[i] == 0 && nectarStorage[i] == 0 && pollenStorage[i] < pollenCapacity)
             {
                 Debug.Log(i);
                 return i;
@@ -170,6 +192,8 @@ public class HoneycombManager : MonoBehaviour
             nectarStorage.Add(0);
             honeyStorageM.Add(0);
             nectarStorageM.Add(0);
+            pollenStorage.Add(0);
+            pollenStorageM.Add(0);
             honeycombNum++;
 
             wax = wax - HCPrice * (float)Math.Pow(1000, -waxM + HCPriceM);
@@ -203,6 +227,7 @@ public class HoneycombManager : MonoBehaviour
     public float changeNectarStorage(int index, float nectar, int nectarM)
     {
         nectarStorage[index] += nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM);
+        SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM), SMScript.getNectarM());
 
         if(nectarStorage[index] > 1000)
         {
@@ -227,6 +252,34 @@ public class HoneycombManager : MonoBehaviour
         return 0;
     }
 
+    public float changePollenStorage(int index, float pollen, int pollenM)
+    {
+        pollenStorage[index] += pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM);
+        SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM), SMScript.getPollenM());
+
+        if(pollenStorage[index] > 1000)
+        {
+            pollenStorage[index] /= 1000;
+            pollenStorageM[index]++;
+        }
+
+        if(pollenCapacityM < pollenStorageM[index] || (pollenCapacityM == pollenStorageM[index] && pollenCapacity < pollenStorage[index]))
+        {
+            Debug.Log("full");
+            float returnValue = (pollenStorage[index] - pollenCapacity * (float)Math.Pow(1000, pollenCapacityM - pollenStorageM[index])) * (float)Math.Pow(1000, pollenStorageM[index] - pollenM);
+
+            pollenStorage[index] = pollenCapacity;
+            pollenStorageM[index] = pollenCapacityM;
+
+            drawTile(index);
+            Debug.Log(returnValue);
+            return returnValue;
+        }
+
+        drawTile(index);
+        return 0;
+    }
+
     void drawTile(int i)
     {
         int tileNum;
@@ -240,6 +293,11 @@ public class HoneycombManager : MonoBehaviour
         {
             tileNum = (int)((nectarStorage[i]) / (nectarCapacity) * (float)Math.Pow(1000, nectarStorageM[i] - nectarCapacityM) * (hcTile.Length - 1));
             hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcNectarTile[tileNum]);
+        } 
+        else if(pollenStorage[i] > 0)
+        {
+            tileNum = (int)((pollenStorage[i]) / (pollenCapacity) * (float)Math.Pow(1000, pollenStorageM[i] - pollenCapacityM) * (hcTile.Length - 1));
+            hiveGrid.SetTile(new Vector3Int(hcPos[i][0], hcPos[i][1], 0), hcPollenTile[tileNum]);
         } 
         else
         {

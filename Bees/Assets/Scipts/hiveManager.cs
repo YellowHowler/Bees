@@ -16,7 +16,7 @@ public class hiveManager : MonoBehaviour
     {
         RMScript = RoomManager.GetComponent<RoomManager>();
         Debug.Log(Screen.width);
-        HiveGrid.SetTile(new Vector3Int(-5, 5, 0), hiveTile);
+        HiveGrid.SetTile(new Vector3Int(-4, 5, 0), hiveTile);
     }
 
     // Update is called once per frame

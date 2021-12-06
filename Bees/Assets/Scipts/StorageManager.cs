@@ -32,20 +32,21 @@ public class StorageManager : MonoBehaviour
     public int getPollenM(){return pollenM;}
     public int getWaxM(){return waxM;}
 
-    public void setHoney(float newValue) {honey = newValue;}
-    public void setNectar(float newValue) {nectar = newValue;}
-    public void setPollen(float newValue) {pollen = newValue;}
+    public void setHoney(float newValue, int newM) {honey = newValue;honeyM = newM;changeText();}
+    public void setNectar(float newValue, int newM) {nectar = newValue;nectarM = newM;changeText();}
+    public void setPollen(float newValue, int newM) {pollen = newValue;pollenM = newM;changeText();}
     public void setWax(float newValue, int newM) 
     {
         wax = newValue;
         waxM = newM;
+        changeText();
     }
     
     public string[] getMultipliers() { return multipliers; }
 
     void Awake()
     {
-        multipliers = new string[]{"", "A", "B", "C", "D"};
+        multipliers = new string[]{"ug", "mg", "g", "kg"};
 
         honey = 5f;
         nectar = 5f;
@@ -66,15 +67,56 @@ public class StorageManager : MonoBehaviour
         nectar = nectarM == 0 ? Mathf.RoundToInt(nectar) : Mathf.Round(nectar * 100.0f) * 0.01f;
         wax = waxM == 0 ? Mathf.RoundToInt(wax) : Mathf.Round(wax * 100.0f) * 0.01f;
         pollen = pollenM == 0 ? Mathf.RoundToInt(pollen) : Mathf.Round(pollen * 100.0f) * 0.01f;
+
+        if(honey > 1000)
+        {
+            honeyM++;
+            honey /= 1000;
+        }
+        else if(honey < 1)
+        {
+            honeyM--;
+            honey *= 1000;
+        }
+        if(nectar > 1000)
+        {
+            nectarM++;
+            nectar /= 1000;
+        }
+        else if(nectar < 1)
+        {
+            nectarM--;
+            nectar *= 1000;
+        }
+        if(wax > 1000)
+        {
+            waxM++;
+            wax /= 1000;
+        }
+        else if(wax < 1)
+        {
+            waxM--;
+            wax *= 1000;
+        }
+        if(pollen > 1000)
+        {
+            pollenM++;
+            pollen /= 1000;
+        }
+        else if(pollen < 1)
+        {
+            pollenM--;
+            pollen *= 1000;
+        }
     }
 
     public void changeText()
     {   
         roundStorage();
-        honeyText.text = (honey).ToString() + multipliers[honeyM];
-        nectarText.text = (nectar).ToString() + multipliers[nectarM];
-        pollenText.text = (pollen).ToString() + multipliers[pollenM];
-        waxText.text = (wax).ToString() + multipliers[waxM];
+        honeyText.text = (honey).ToString("F1") + multipliers[honeyM];
+        nectarText.text = (nectar).ToString("F1") + multipliers[nectarM];
+        pollenText.text = (pollen).ToString("F1") + multipliers[pollenM];
+        waxText.text = (wax).ToString("F1") + multipliers[waxM];
     }
 
     void Start()

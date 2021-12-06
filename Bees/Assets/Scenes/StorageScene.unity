@@ -2793,15 +2793,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 63f616acb478b4f829b299bedd061c5d, type: 2}
   flowerNames:
   - cosmos
-  - daisy
+  - oxeye_daisy
   flowerNectar:
-  - 110
-  - 30
-  flowerNectarM: 0000000000000000
+  - 1.4
+  - 1
+  flowerNectarM: 0100000001000000
   flowerPollen:
-  - 0
-  - 0
-  flowerPollenM: 0000000000000000
+  - 19.7
+  - 22.8
+  flowerPollenM: 0100000001000000
 --- !u!4 &792304303
 Transform:
   m_ObjectHideFlags: 0
@@ -3025,6 +3025,7 @@ MonoBehaviour:
   HiveManager: {fileID: 1513854559}
   HiveBGManager: {fileID: 1159176351}
   FlowerManager: {fileID: 792304301}
+  StorageManager: {fileID: 1919902513}
   flowerCollectSliderObj: {fileID: 1754592542}
   flowerCollectSlider: {fileID: 1754592543}
 --- !u!1 &1003879514

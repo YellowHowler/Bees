@@ -11,14 +11,17 @@ public class BeeManager : MonoBehaviour
    [SerializeField] GameObject HiveManager;
    [SerializeField] GameObject HiveBGManager;
    [SerializeField] GameObject FlowerManager;
+   [SerializeField] GameObject StorageManager;
    [SerializeField] GameObject flowerCollectSliderObj;
    [SerializeField] Slider flowerCollectSlider;
    RoomManager RMScript;
    HiveBGManager HVBGScript;
    FlowerManager FLScript;
    HoneycombManager HCScript;
+   StorageManager SMScript;
   
    Renderer rd;
+   Animator ani;
  
    private Vector3 destination;
    private Vector3 exitPos;
@@ -47,10 +50,13 @@ public class BeeManager : MonoBehaviour
    void Awake()
    {
        rd = beeObj.GetComponent<Renderer>();
+       ani = beeObj.GetComponent<Animator>();
+
        RMScript = RoomManager.GetComponent<RoomManager>();
        HVBGScript = HiveBGManager.GetComponent<HiveBGManager>();
        FLScript = FlowerManager.GetComponent<FlowerManager>();
        HCScript = HiveManager.GetComponent<HoneycombManager>();
+       SMScript = StorageManager.GetComponent<StorageManager>();
  
        storage = new float[]{0f, 0f, 0f, 0f};
        storageM = new int[]{0, 0, 0, 0};
@@ -65,6 +71,7 @@ public class BeeManager : MonoBehaviour
        exitPos = HVBGScript.getExitPos();
       
        changeJob("flower");
+       ani.SetBool("hasPollen", false);
    }
  
    private void hide()
@@ -84,6 +91,9 @@ public class BeeManager : MonoBehaviour
        currentRoom = RMScript.GetCurrentRoom();
  
        hide();
+
+       if(storage[2] != 0) ani.SetBool("hasPollen", true);
+       else ani.SetBool("hasPollen", false);
  
        if(job.Equals("flower"))
        {
@@ -139,14 +149,13 @@ public class BeeManager : MonoBehaviour
                    Debug.Log("done collecting");
  
                    storage[1] += FLScript.getFlowerNectar(flower) * (float)Math.Pow(10.0f, (storageM[1] - FLScript.getFlowerNectarM(flower)) * -3);
+                   storage[2] += FLScript.getFlowerPollen(flower) * (float)Math.Pow(10.0f, (storageM[2] - FLScript.getFlowerPollenM(flower)) * -3);
+                   
                    if(storage[1] >= 1000)
                    {
                        storageM[1]++;
                        storage[1] /= 1000;
                    }
- 
-                   Debug.Log(storage[1]);
-                   Debug.Log(storageM[1]);
                }
                else if(currentDestination == 3 && location == "Garden")
                {
@@ -189,6 +198,39 @@ public class BeeManager : MonoBehaviour
                    if(storage[1] > 0) 
                    {
                        currentDestination = 3;
+                   }
+                   else if(storage[2] > 0)
+                   {
+                       currentDestination = 5;
+                   }
+                   else
+                   {
+                       currentDestination = 0;
+                   }
+               }
+               else if(currentDestination == 5 && location == "Storage")
+               {
+                   honeycomb = HCScript.getEmptyHCPollen();
+ 
+                   if(honeycomb == -1)
+                   {
+                       job = "idle";
+                       Debug.Log("idle");
+                   }
+                   else
+                   {
+                       Debug.Log("honeycomb: " + honeycomb);
+                       destination = HCScript.getHCTilePos(honeycomb);
+                       currentDestination++;
+                   } 
+               }
+               else if(currentDestination == 6 && location == "Storage")
+               {
+                   storage[2] = HCScript.changePollenStorage(honeycomb, storage[2], storageM[2]);
+ 
+                   if(storage[2] > 0) 
+                   {
+                       currentDestination = 5;
                    }
                    else
                    {

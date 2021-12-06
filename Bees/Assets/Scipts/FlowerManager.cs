@@ -33,6 +33,11 @@ public class FlowerManager : MonoBehaviour
 
         flowers.Add(0);
         flowers.Add(1);
+        flowers.Add(2);
+        flowers.Add(3);
+
+        flowerFull.Add(false);
+        flowerFull.Add(false);
         flowerFull.Add(false);
         flowerFull.Add(false);
 
@@ -103,7 +108,7 @@ public class FlowerManager : MonoBehaviour
     {
         for(int i = 0; i < flowers.Count; i++)
         {
-            FlowerGrid.SetTile(new Vector3Int(i * 2, -1, 0), flowerTiles[flowers[i]]);
+            FlowerGrid.SetTile(new Vector3Int(i * 2, 0, 0), flowerTiles[flowers[i]]);
         }
     }
 }

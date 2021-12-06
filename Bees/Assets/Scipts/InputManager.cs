@@ -70,7 +70,7 @@ public class InputManager : MonoBehaviour
         multipliers = SMScript.getMultipliers();
 
         HCPriceStr = (HCPriceM == 0 ? Mathf.RoundToInt(HCPrice) : Mathf.Round(HCPrice * 100.0f) * 0.01f).ToString() + multipliers[HCPriceM];
-        hivePos = new Vector3Int[]{new Vector3Int(-65, 5, 0), new Vector3Int(-5, 5, 0), new Vector3Int(-4, 5, 0), new Vector3Int(-3, 5, 0), new Vector3Int(-6, 4, 0), new Vector3Int(-5, 4, 0), new Vector3Int(-4, 4, 0), new Vector3Int(-3, 4, 0), new Vector3Int(-6, 3, 0), new Vector3Int(-5, 3, 0), new Vector3Int(-4, 3, 0), new Vector3Int(-3, 3, 0)};
+        hivePos = new Vector3Int[]{new Vector3Int(-5, 5, 0), new Vector3Int(-4, 5, 0), new Vector3Int(-3, 5, 0), new Vector3Int(-2, 5, 0), new Vector3Int(-5, 4, 0), new Vector3Int(-4, 4, 0), new Vector3Int(-3, 4, 0), new Vector3Int(-2, 4, 0), new Vector3Int(-5, 3, 0), new Vector3Int(-4, 3, 0), new Vector3Int(-3, 3, 0), new Vector3Int(-2, 3, 0)};
     }
 
     // Update is called once per frame
@@ -92,10 +92,10 @@ public class InputManager : MonoBehaviour
 
             if(Array.IndexOf(hivePos, mouseTilePosHive) > -1)
             {
-                HiveGrid.SetTile(new Vector3Int(-5, 5, 0), HiveTileSelected);
+                HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTileSelected);
             }
             else{
-                HiveGrid.SetTile(new Vector3Int(-5, 5, 0), HiveTile);
+                HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTile);
             }
 
             if(Input.GetMouseButtonDown(0))
