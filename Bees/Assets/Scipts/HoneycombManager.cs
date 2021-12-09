@@ -43,7 +43,7 @@ public class HoneycombManager : MonoBehaviour
     private List<int> pollenStorageM;
 
     private int honeycombNum = 0;
-    private float HCPrice = 600;
+    private float HCPrice = 1;
     private int HCPriceM = 0;
 
     private int left;
@@ -148,11 +148,16 @@ public class HoneycombManager : MonoBehaviour
         
     }
 
+    public void getStorageHC(int index)
+    {
+        Debug.Log("nectar: " + nectarStorage[index]);
+    }
+
     public int getEmptyHCNectar()
     {
         for(int i = 0; i < honeycombNum; i++)
         {
-            if(honeyStorage[i] == 0 && pollenStorage[i] == 0 && nectarStorage[i] < nectarCapacity)
+            if(honeyStorage[i] == 0 && pollenStorage[i] == 0 && nectarStorage[i] * Math.Pow(1000, nectarStorageM[i]) < nectarCapacity * Math.Pow(1000, nectarCapacityM))
             {
                 Debug.Log(i);
                 return i;
@@ -165,7 +170,7 @@ public class HoneycombManager : MonoBehaviour
     {
         for(int i = 0; i < honeycombNum; i++)
         {
-            if(honeyStorage[i] == 0 && nectarStorage[i] == 0 && pollenStorage[i] < pollenCapacity)
+            if(honeyStorage[i] == 0 && nectarStorage[i] == 0 && pollenStorage[i] * Math.Pow(1000, pollenStorageM[i]) < pollenCapacity * Math.Pow(1000, pollenCapacityM))
             {
                 Debug.Log(i);
                 return i;
@@ -227,7 +232,6 @@ public class HoneycombManager : MonoBehaviour
     public float changeNectarStorage(int index, float nectar, int nectarM)
     {
         nectarStorage[index] += nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM);
-        SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM), SMScript.getNectarM());
 
         if(nectarStorage[index] > 1000)
         {
@@ -238,6 +242,7 @@ public class HoneycombManager : MonoBehaviour
         if(nectarCapacityM < nectarStorageM[index] || (nectarCapacityM == nectarStorageM[index] && nectarCapacity < nectarStorage[index]))
         {
             Debug.Log("full");
+            SMScript.setNectar(SMScript.getNectar() + nectarCapacity * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarCapacityM), SMScript.getNectarM());
             float returnValue = (nectarStorage[index] - nectarCapacity * (float)Math.Pow(1000, nectarCapacityM - nectarStorageM[index])) * (float)Math.Pow(1000, nectarStorageM[index] - nectarM);
 
             nectarStorage[index] = nectarCapacity;
@@ -248,14 +253,27 @@ public class HoneycombManager : MonoBehaviour
             return returnValue;
         }
 
+        SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarM), SMScript.getNectarM());
         drawTile(index);
         return 0;
+    }
+
+    public int findHcPos(int x, int y)
+    {
+        for(int i = 0; i < hcPos.Count; i++)
+        {
+            if(x == hcPos[i][0] && y == hcPos[i][1])
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public float changePollenStorage(int index, float pollen, int pollenM)
     {
         pollenStorage[index] += pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM);
-        SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM), SMScript.getPollenM());
 
         if(pollenStorage[index] > 1000)
         {
@@ -266,6 +284,7 @@ public class HoneycombManager : MonoBehaviour
         if(pollenCapacityM < pollenStorageM[index] || (pollenCapacityM == pollenStorageM[index] && pollenCapacity < pollenStorage[index]))
         {
             Debug.Log("full");
+            SMScript.setPollen(SMScript.getPollen() + pollenCapacity * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenCapacityM), SMScript.getPollenM());
             float returnValue = (pollenStorage[index] - pollenCapacity * (float)Math.Pow(1000, pollenCapacityM - pollenStorageM[index])) * (float)Math.Pow(1000, pollenStorageM[index] - pollenM);
 
             pollenStorage[index] = pollenCapacity;
@@ -275,6 +294,8 @@ public class HoneycombManager : MonoBehaviour
             Debug.Log(returnValue);
             return returnValue;
         }
+
+        SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenM), SMScript.getPollenM());
 
         drawTile(index);
         return 0;

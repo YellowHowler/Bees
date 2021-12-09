@@ -87,11 +87,17 @@ public class FlowerManager : MonoBehaviour
 
         switch(flowerNames[index])
         {
-            case "daisy":
-                yDif = 1.6f;
-                break;
             case "cosmos":
                 yDif = 1.6f;
+                break;
+            case "oxeye_daisy":
+                yDif = 1.6f;
+                break;
+            case "lavender":
+                yDif = 2.2f;
+                break;
+            case "california_poppy":
+                yDif = 0.4f;
                 break;
         }
 

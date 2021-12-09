@@ -125,6 +125,9 @@ public class InputManager : MonoBehaviour
             {
                 if(hiveGrid.HasTile(mouseTilePos))
                 {
+                    int index = HCScript.findHcPos(mouseTilePos.x, mouseTilePos.y);
+                    Debug.Log(index);
+                    HCScript.getStorageHC(index);
                 }
                 else if(BGGrid.HasTile(mouseTilePos))
                 {

@@ -6,14 +6,16 @@ using UnityEngine.UI;
  
 public class BeeManager : MonoBehaviour
 {
-   [SerializeField] GameObject RoomManager;
    [SerializeField] GameObject beeObj;
-   [SerializeField] GameObject HiveManager;
-   [SerializeField] GameObject HiveBGManager;
-   [SerializeField] GameObject FlowerManager;
-   [SerializeField] GameObject StorageManager;
    [SerializeField] GameObject flowerCollectSliderObj;
    [SerializeField] Slider flowerCollectSlider;
+
+   GameObject RoomManager;
+   GameObject HiveManager;
+   GameObject HiveBGManager;
+   GameObject FlowerManager;
+   GameObject StorageManager;
+
    RoomManager RMScript;
    HiveBGManager HVBGScript;
    FlowerManager FLScript;
@@ -43,12 +45,18 @@ public class BeeManager : MonoBehaviour
    //going to exit, going to flower, waiting, going to hive, going to honeycomb
  
    private float onFlower = 0f;
-   private float flowerTime = 10f;
+   private float flowerTime = 5f;
  
    private string job = "idle";
  
    void Awake()
    {
+       RoomManager = GameObject.FindWithTag("RM");
+       HiveBGManager = GameObject.FindWithTag("HVBG");
+       FlowerManager = GameObject.FindWithTag("FL");
+       HiveManager = GameObject.FindWithTag("HC");
+       StorageManager = GameObject.FindWithTag("SM");
+
        rd = beeObj.GetComponent<Renderer>();
        ani = beeObj.GetComponent<Animator>();
 
@@ -108,7 +116,7 @@ public class BeeManager : MonoBehaviour
            {
                if(currentDestination == 0)
                {
-                   transform.position = new Vector3(-3, 2, 0);
+                   transform.position = new Vector3(-5, 7, 0);
  
                    currentDestination++;
                    location = "Garden";
