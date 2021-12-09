@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - IN
+  - RM
+  - HVBG
+  - FL
+  - HC
+  - SM
   layers:
   - Default
   - TransparentFX
