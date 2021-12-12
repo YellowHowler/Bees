@@ -120,9 +120,7 @@ public class BeeManager : MonoBehaviour
  
                    currentDestination++;
                    location = "Garden";
- 
-                   hide();
-                   Debug.Log(location);
+                    hide();
  
                    if(flower != -1)
                    {
@@ -178,6 +176,7 @@ public class BeeManager : MonoBehaviour
                    {
                        Debug.Log("honeycomb: " + honeycomb);
                        location = "Storage";
+                       hide();
                        transform.position = HVBGScript.getExitPos();
                        destination = HCScript.getHCTilePos(honeycomb);
                        currentDestination++;
@@ -275,9 +274,28 @@ public class BeeManager : MonoBehaviour
  
    void move(Vector3 endPos)
    {
-       if(endPos.x > transform.position.x) transform.localRotation = Quaternion.Euler(0, 180, 0);
-       else transform.localRotation = Quaternion.Euler(0, 0, 0);
- 
+       if(location == "Garden")
+       {
+           moveSpeed = 2.5f;
+            ani.SetBool("isWalking", false);
+            if(endPos.x > transform.position.x) transform.localRotation = Quaternion.Euler(0, 180, 0);
+            else transform.localRotation = Quaternion.Euler(0, 0, 0);
+       }
+       else
+       {
+           moveSpeed = 2.6f;
+            ani.SetBool("isWalking", true);
+
+            Vector2 direction = new Vector2(
+            transform.position.x - endPos.x,
+            transform.position.y - endPos.y
+            );
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion angleAxis = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+            Quaternion rotation = Quaternion.Slerp(transform.rotation, angleAxis, 100f);
+            transform.rotation = rotation;
+       }
        transform.position = Vector3.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
    }
 }
