@@ -23,7 +23,7 @@ public class CameraManager : MonoBehaviour
     private Vector3 bgZeroPos;
 
     public float horizontalResolution = 1920f;
-    public float ScrollSpeed = 1.5f;
+    public float ScrollSpeed = 0.7f;
     private int hcNum;
     float currentAspect;
     float cameraSize;

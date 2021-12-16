@@ -148,9 +148,46 @@ public class HoneycombManager : MonoBehaviour
         
     }
 
-    public void getStorageHC(int index)
+    public float[] getStorageHC(int index, bool emptyHC)
     {
-        Debug.Log("nectar: " + nectarStorage[index]);
+        float storageType = 0f;
+        float storage = 0f;
+        float storageM = 0f;
+
+        if(honeyStorage[index] > 0f)
+        {
+            storageType = 0f;
+            storage = honeyStorage[index];
+            storageM = honeyStorageM[index];
+        }
+        else if(nectarStorage[index] > 0f)
+        {
+            storageType = 1f;
+            storage = nectarStorage[index];
+            storageM = nectarStorageM[index];
+        }
+        else if(pollenStorage[index] > 0f)
+        {
+            storageType = 2f;
+            storage = pollenStorage[index];
+            storageM = pollenStorageM[index];
+        }
+
+        if(emptyHC)
+        {
+            honeyStorage[index] = 0f;
+            honeyStorageM[index] = 0;
+
+            nectarStorage[index] = 0f;
+            nectarStorageM[index] = 0;
+
+            pollenStorage[index] = 0f;
+            pollenStorageM[index] = 0;
+
+            drawTile(index);
+        }
+
+        return new float[]{storageType, storage, storageM};
     }
 
     public int getEmptyHCNectar()

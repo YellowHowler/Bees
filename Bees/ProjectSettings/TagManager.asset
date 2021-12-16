@@ -10,6 +10,7 @@ TagManager:
   - FL
   - HC
   - SM
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -74,11 +75,20 @@ TagManager:
   - name: hive
     uniqueID: 3772322111
     locked: 0
-  - name: ClickIcon
-    uniqueID: 547931365
+  - name: Hover
+    uniqueID: 3570129821
+    locked: 0
+  - name: Item
+    uniqueID: 756778855
+    locked: 0
+  - name: ItemValue
+    uniqueID: 2937350513
     locked: 0
   - name: Bee
     uniqueID: 3886803069
+    locked: 0
+  - name: ClickIcon
+    uniqueID: 547931365
     locked: 0
   - name: Transition
     uniqueID: 259387441

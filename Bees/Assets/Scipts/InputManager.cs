@@ -17,12 +17,14 @@ public class InputManager : MonoBehaviour
     [SerializeField] Tile buyTileEmpty;
     [SerializeField] Tile HiveTile;
     [SerializeField] Tile HiveTileSelected;
+    [SerializeField] GameObject HCHovered;
     [SerializeField] GameObject HCPriceObj;
     [SerializeField] GameObject HCPriceTxtObj;
     [SerializeField] GameObject HCManager;
     [SerializeField] GameObject StorageManager;
     [SerializeField] GameObject RoomManager;
     [SerializeField] GameObject BuyHCSliderObj;
+    [SerializeField] GameObject item;
     [SerializeField] Slider BuyHCSlider; 
 
     BuyHoneycombText HCPriceTxt;
@@ -120,6 +122,15 @@ public class InputManager : MonoBehaviour
             {
                 HCPriceObj.SetActive(false);
             }
+            if(hiveGrid.HasTile(mouseTilePos))
+            {
+                HCHovered.GetComponent<SpriteRenderer>().enabled = true;
+                HCHovered.transform.position = BGGrid.GetCellCenterWorld(mouseTilePos);
+            }
+            else
+            {
+                HCHovered.GetComponent<SpriteRenderer>().enabled = false;
+            }
 
             if(Input.GetMouseButtonDown(0))
             {
@@ -127,7 +138,14 @@ public class InputManager : MonoBehaviour
                 {
                     int index = HCScript.findHcPos(mouseTilePos.x, mouseTilePos.y);
                     Debug.Log(index);
-                    HCScript.getStorageHC(index);
+
+                    float[] itemStorage = HCScript.getStorageHC(index, true);
+
+                    if(itemStorage[1] > 0f)
+                    {
+                        GameObject newItem = Instantiate(item, BGGrid.GetCellCenterWorld(mouseTilePos), transform.rotation);
+                        newItem.GetComponent<Item>().setItem(itemStorage);
+                    }
                 }
                 else if(BGGrid.HasTile(mouseTilePos))
                 {
