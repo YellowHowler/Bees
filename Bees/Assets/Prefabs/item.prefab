@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637ef5679a7464a0fae37a1725912801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item: {fileID: 8017101183838965685}
   valueText: {fileID: 8017101184315569304}
   itemSprite:
   - {fileID: 21300000, guid: 5ce5cf1ba648d45c091fed937ee1c8e8, type: 3}
@@ -224,7 +225,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &4449173742507463548
 CircleCollider2D:
   m_ObjectHideFlags: 0

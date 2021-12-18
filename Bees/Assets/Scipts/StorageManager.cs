@@ -48,9 +48,9 @@ public class StorageManager : MonoBehaviour
     {
         multipliers = new string[]{"ug", "mg", "g", "kg"};
 
-        honey = 5f;
-        nectar = 5f;
-        pollen = 5f;
+        honey = 0f;
+        nectar = 0f;
+        pollen = 0f;
         wax = 1.3f;
 
         honeyM = 0;
@@ -68,42 +68,42 @@ public class StorageManager : MonoBehaviour
         wax = waxM == 0 ? Mathf.RoundToInt(wax) : Mathf.Round(wax * 100.0f) * 0.01f;
         pollen = pollenM == 0 ? Mathf.RoundToInt(pollen) : Mathf.Round(pollen * 100.0f) * 0.01f;
 
-        if(honey > 1000)
+        if(honey >= 1000)
         {
             honeyM++;
             honey /= 1000;
         }
-        else if(honey < 1)
+        else if(honey < 1 && honeyM != 0)
         {
             honeyM--;
             honey *= 1000;
         }
-        if(nectar > 1000)
+        if(nectar >= 1000)
         {
             nectarM++;
             nectar /= 1000;
         }
-        else if(nectar < 1)
+        else if(nectar < 1 && nectarM != 0)
         {
             nectarM--;
             nectar *= 1000;
         }
-        if(wax > 1000)
+        if(wax >= 1000)
         {
             waxM++;
             wax /= 1000;
         }
-        else if(wax < 1)
+        else if(wax < 1 && waxM != 0)
         {
             waxM--;
             wax *= 1000;
         }
-        if(pollen > 1000)
+        if(pollen >= 1000)
         {
             pollenM++;
             pollen /= 1000;
         }
-        else if(pollen < 1)
+        else if(pollen < 1 && pollenM != 0)
         {
             pollenM--;
             pollen *= 1000;

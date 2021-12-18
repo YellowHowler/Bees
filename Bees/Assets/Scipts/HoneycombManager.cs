@@ -150,7 +150,7 @@ public class HoneycombManager : MonoBehaviour
 
     public float[] getStorageHC(int index, bool emptyHC)
     {
-        float storageType = 0f;
+        float storageType = -1f;
         float storage = 0f;
         float storageM = 0f;
 
@@ -266,21 +266,72 @@ public class HoneycombManager : MonoBehaviour
         }
     }
 
+    public float changeHoneyStorage(int index, float honey, int honeyM)
+    {
+        honeyStorage[index] += honey * (float)Math.Pow(1000, -honeyStorageM[index] + honeyM);
+
+        if(honeyStorage[index] >= 1000)
+        {
+            honeyStorage[index] /= 1000;
+            honeyStorageM[index]++;
+        }
+        if(honeyStorage[index] < 1f && honeyStorageM[index] != 0)
+        {
+            honeyStorage[index] *= 1000;
+            honeyStorageM[index]--;
+        }
+        if(honeyStorage[index] <= 0f)
+        {
+            honeyStorage[index] = 0f;
+            honeyStorageM[index] = 0;
+        }
+
+        if(honeyCapacityM < honeyStorageM[index] || (honeyCapacityM == honeyStorageM[index] && honeyCapacity < honeyStorage[index]))
+        {
+            Debug.Log("full");
+            SMScript.setHoney(SMScript.getHoney() + honey * (float)Math.Pow(1000, -SMScript.getHoneyM() + honeyM), SMScript.getHoneyM());
+            float returnValue = (honeyStorage[index] - honeyCapacity * (float)Math.Pow(1000, honeyCapacityM - honeyStorageM[index])) * (float)Math.Pow(1000, honeyStorageM[index] - honeyM);
+            SMScript.setHoney(SMScript.getHoney() - returnValue * (float)Math.Pow(1000, -SMScript.getHoneyM()), SMScript.getHoneyM());
+
+            honeyStorage[index] = honeyCapacity;
+            honeyStorageM[index] = honeyCapacityM;
+
+            drawTile(index);
+            Debug.Log(returnValue);
+            return returnValue;
+        }
+
+        SMScript.setHoney(SMScript.getHoney() + honey * (float)Math.Pow(1000, -SMScript.getHoneyM() + honeyM), SMScript.getHoneyM());
+        drawTile(index);
+        return 0;
+    }
+
     public float changeNectarStorage(int index, float nectar, int nectarM)
     {
-        nectarStorage[index] += nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM);
+        nectarStorage[index] = nectarStorage[index] + nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM);
 
-        if(nectarStorage[index] > 1000)
+        if(nectarStorage[index] >= 1000)
         {
             nectarStorage[index] /= 1000;
             nectarStorageM[index]++;
+        }
+        if(nectarStorage[index] < 1f && nectarStorageM[index] != 0)
+        {
+            nectarStorage[index] *= 1000;
+            nectarStorageM[index]--;
+        }
+        if(nectarStorage[index] <= 0f)
+        {
+            nectarStorage[index] = 0f;
+            nectarStorageM[index] = 0;
         }
 
         if(nectarCapacityM < nectarStorageM[index] || (nectarCapacityM == nectarStorageM[index] && nectarCapacity < nectarStorage[index]))
         {
             Debug.Log("full");
-            SMScript.setNectar(SMScript.getNectar() + nectarCapacity * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarCapacityM), SMScript.getNectarM());
+            SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarM), SMScript.getNectarM());
             float returnValue = (nectarStorage[index] - nectarCapacity * (float)Math.Pow(1000, nectarCapacityM - nectarStorageM[index])) * (float)Math.Pow(1000, nectarStorageM[index] - nectarM);
+            SMScript.setNectar(SMScript.getNectar() - returnValue * (float)Math.Pow(1000, -SMScript.getNectarM()), SMScript.getNectarM());
 
             nectarStorage[index] = nectarCapacity;
             nectarStorageM[index] = nectarCapacityM;
@@ -310,19 +361,30 @@ public class HoneycombManager : MonoBehaviour
 
     public float changePollenStorage(int index, float pollen, int pollenM)
     {
-        pollenStorage[index] += pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM);
+        pollenStorage[index] = pollenStorage[index] + pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM);
 
-        if(pollenStorage[index] > 1000)
+        if(pollenStorage[index] >= 1000)
         {
             pollenStorage[index] /= 1000;
             pollenStorageM[index]++;
+        }
+        if(pollenStorage[index] < 1f && pollenStorageM[index] != 0)
+        {
+            pollenStorage[index] *= 1000;
+            pollenStorageM[index]--;
+        }
+        if(pollenStorage[index] <= 0f)
+        {
+            pollenStorage[index] = 0f;
+            pollenStorageM[index] = 0;
         }
 
         if(pollenCapacityM < pollenStorageM[index] || (pollenCapacityM == pollenStorageM[index] && pollenCapacity < pollenStorage[index]))
         {
             Debug.Log("full");
-            SMScript.setPollen(SMScript.getPollen() + pollenCapacity * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenCapacityM), SMScript.getPollenM());
+            SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenM), SMScript.getPollenM());
             float returnValue = (pollenStorage[index] - pollenCapacity * (float)Math.Pow(1000, pollenCapacityM - pollenStorageM[index])) * (float)Math.Pow(1000, pollenStorageM[index] - pollenM);
+            SMScript.setPollen(SMScript.getPollen() - returnValue * (float)Math.Pow(1000, -SMScript.getPollenM()), SMScript.getPollenM());
 
             pollenStorage[index] = pollenCapacity;
             pollenStorageM[index] = pollenCapacityM;
@@ -338,7 +400,7 @@ public class HoneycombManager : MonoBehaviour
         return 0;
     }
 
-    void drawTile(int i)
+    public void drawTile(int i)
     {
         int tileNum;
         if(honeyStorage[i] > 0)

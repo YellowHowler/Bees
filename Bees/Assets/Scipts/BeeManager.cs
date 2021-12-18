@@ -120,6 +120,7 @@ public class BeeManager : MonoBehaviour
  
                    currentDestination++;
                    location = "Garden";
+                   ani.SetBool("isWalking", false);
                     hide();
  
                    if(flower != -1)
@@ -176,6 +177,7 @@ public class BeeManager : MonoBehaviour
                    {
                        Debug.Log("honeycomb: " + honeycomb);
                        location = "Storage";
+                       ani.SetBool("isWalking", true);
                        hide();
                        transform.position = HVBGScript.getExitPos();
                        destination = HCScript.getHCTilePos(honeycomb);

@@ -32,6 +32,8 @@ public class InputManager : MonoBehaviour
     StorageManager SMScript;
     RoomManager RMScript;
 
+    public bool couldBuy {get;set;}
+
     private string HCPriceStr;
 
     private Vector2 mousePos;
@@ -58,6 +60,7 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         camera = Camera.main;
+        couldBuy = true;
 
         resetSlider();
 
@@ -95,14 +98,13 @@ public class InputManager : MonoBehaviour
             if(Array.IndexOf(hivePos, mouseTilePosHive) > -1)
             {
                 HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTileSelected);
+                if(Input.GetMouseButtonDown(0))
+                {
+                    RMScript.SetCurrentRoom("Storage");
+                }
             }
             else{
                 HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTile);
-            }
-
-            if(Input.GetMouseButtonDown(0))
-            {
-                RMScript.SetCurrentRoom("Storage");
             }
         }
         else if(RMScript.GetCurrentRoom().Equals("Storage") || RMScript.GetCurrentRoom().Equals("Machinery"))
@@ -140,11 +142,23 @@ public class InputManager : MonoBehaviour
                     Debug.Log(index);
 
                     float[] itemStorage = HCScript.getStorageHC(index, true);
-
+                    Debug.Log("storage: " + itemStorage[0]);
                     if(itemStorage[1] > 0f)
                     {
-                        GameObject newItem = Instantiate(item, BGGrid.GetCellCenterWorld(mouseTilePos), transform.rotation);
-                        newItem.GetComponent<Item>().setItem(itemStorage);
+                        GameObject newItem = Instantiate(item, BGGrid.GetCellCenterWorld(mouseTilePos), Quaternion.identity);
+                        newItem.GetComponent<Item>().setItem(itemStorage, RMScript.GetCurrentRoom());
+                        switch(itemStorage[0])
+                        {
+                            case 0f:
+                                HCScript.changeHoneyStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                break;
+                            case 1f:
+                                HCScript.changeNectarStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                break;
+                            case 2f:
+                                HCScript.changePollenStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                break;
+                        }
                     }
                 }
                 else if(BGGrid.HasTile(mouseTilePos))
@@ -158,7 +172,7 @@ public class InputManager : MonoBehaviour
                 if(hiveGrid.HasTile(mouseTilePos))
                 {
                 }
-                else if(BGGrid.HasTile(mouseTilePos))
+                else if(BGGrid.HasTile(mouseTilePos) && couldBuy)
                 {
                     if(sliderPos == mouseTilePos)
                     {

@@ -7,16 +7,48 @@ using UnityEngine.Tilemaps;
 using UnityEditor;
 public class Item : MonoBehaviour
 {
+    [SerializeField] GameObject item;
     [SerializeField] Text valueText;
     [SerializeField] Sprite[] itemSprite;
+
+    InputManager IPScript;
+    RoomManager RMScript;
+    HoneycombManager HCScript;
+
+    Tilemap hiveGrid;
+
+    Rigidbody2D rgbody;
 
     public float type{get; set;}
     public float storage{get; set;}
     public float storageM{get; set;}
     
+    public  bool isMerge {get; set;}
+    private bool canStore = false;
 
-    public void setItem(float[] setup)
+    private string location;
+
+    private void OnMouseDrag()
     {
+        rgbody.isKinematic = true;
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(mousePos.y > -3.46f) transform.position = mousePos;
+        IPScript.couldBuy = false;
+    }
+    private void OnMouseExit()
+    {
+        rgbody.isKinematic = false;
+        IPScript.couldBuy = true;
+    }
+
+    public void setItem(float[] setup, string loc)
+    {
+        isMerge = true;
+        rgbody = gameObject.GetComponent<Rigidbody2D>();
+        rgbody.isKinematic = false;
+
+        location = loc;
+
         string[] multipliers = new string[]{"ug", "mg", "g", "kg"};
         type = setup[0];
         storage = setup[1];
@@ -24,10 +56,16 @@ public class Item : MonoBehaviour
 
         gameObject.GetComponent<SpriteRenderer>().sprite = itemSprite[(int)type];
         valueText.text = storage.ToString() + multipliers[(int)storageM];
+
+        IPScript = GameObject.FindWithTag("IN").GetComponent<InputManager>();
+        RMScript = GameObject.FindWithTag("RM").GetComponent<RoomManager>();
+        HCScript = GameObject.FindWithTag("HC").GetComponent<HoneycombManager>();
+        hiveGrid = GameObject.FindWithTag("HCGrid").GetComponent<Tilemap>();
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnCollisionEnter2D(Collision2D col)
     {
+        canStore = true;
         Debug.Log("collided");
         if(col.gameObject.CompareTag("Item") && col.gameObject.GetComponent<Item>().type == type)
         {
@@ -46,7 +84,13 @@ public class Item : MonoBehaviour
                 newStorageM--;
             }
 
-            ITScript.setItem(new float[]{type, newStorage, newStorageM});
+            if(isMerge)
+            {
+                GameObject newItem = Instantiate(item, transform.position, Quaternion.identity);
+                newItem.GetComponent<Item>().setItem(new float[]{type, newStorage, newStorageM}, location);
+                ITScript.isMerge = false;
+            }
+            
             Destroy(gameObject);
         }
     }
@@ -59,6 +103,61 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetMouseButtonUp(0))
+        {
+            rgbody.isKinematic = false;
+            IPScript.couldBuy = true;
+
+            if(canStore)
+            {
+                Vector3Int cellPos = hiveGrid.WorldToCell(transform.position);
+
+                if(hiveGrid.HasTile(cellPos))
+                {
+                    int index = HCScript.findHcPos(cellPos.x, cellPos.y);
+                    
+                    if(HCScript.getStorageHC(index, false)[0] == type || HCScript.getStorageHC(index, false)[0] == -1)
+                    {
+                        switch(type)
+                        {
+                            case 0f:
+                                storage = HCScript.changeHoneyStorage(index, storage, (int)storageM);
+                                break;
+                            case 1f:
+                                storage = HCScript.changeNectarStorage(index, storage, (int)storageM);
+                                break;
+                            case 2f:
+                                storage = HCScript.changePollenStorage(index, storage, (int)storageM);
+                                break;
+                        }
+
+                        HCScript.drawTile(index);
+                        
+                        if(storage <= 0f)
+                        {
+                            Destroy(gameObject);
+                        }
+
+                        // storageM = (int)storage / 1000;
+                        // storage /= (float)Math.Pow(1000, storageM);
+
+                        string[] multipliers = new string[]{"ug", "mg", "g", "kg"};
+                        valueText.text = storage.ToString() + multipliers[(int)storageM];
+                    }
+                }
+            }
+        }
+        if(location.Equals(RMScript.GetCurrentRoom()))
+        {
+            rgbody.isKinematic = false;
+            gameObject.active = true;
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x, -3.46f, 0);
+            rgbody.isKinematic = true;
+            IPScript.couldBuy = true;
+            gameObject.active = false;
+        }
     }
 }
