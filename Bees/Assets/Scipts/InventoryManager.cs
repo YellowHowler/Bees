@@ -24,12 +24,20 @@ public class InventoryManager : MonoBehaviour
         itemSlot = new GameObject[slotNum];
         itemValue = new Text[slotNum];
 
+        items = new float[slotNum][];
         for(int i = 0; i < slotNum; i++)
         {
-            select[i] = gameObject.transform.GetChild(1).gameObject;
-            itemSlot[i] = gameObject.transform.GetChild(0).gameObject;
-            itemValue[i] = itemSlot[i].transform.GetChild(0).gameObject.GetComponent<Text>();
+            items[i] = new float[]{-1, -1, -1};
         }
+
+        for(int i = 0; i < slotNum; i++)
+        {
+            itemSlot[i] = inventory[i].transform.GetChild(0).gameObject;
+            itemValue[i] = itemSlot[i].transform.GetChild(0).gameObject.GetComponent<Text>();
+            select[i] = inventory[i].transform.GetChild(1).gameObject;
+        }
+
+        updateSlots();
     }
 
     // Update is called once per frame
@@ -47,7 +55,7 @@ public class InventoryManager : MonoBehaviour
 
         for(int i = 0; i < slotNum; i++)
         {
-            if(items[i][1] == null || items[i][1] <= 0f)
+            if(items[i][1] <= 0f)
             {
                 itemSlot[i].SetActive(false);
                 continue;

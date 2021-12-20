@@ -27,11 +27,13 @@ public class Item : MonoBehaviour
     private bool canMerge = false;
     private bool canStore = false;
     private bool isSelected = false;
+    private bool onMouse = false;
 
     private string location;
 
     private void OnMouseEnter()
     {
+        onMouse = true;
         if(Input.GetMouseButton(0))   
         {
             Destroy(rgbody);
@@ -46,6 +48,7 @@ public class Item : MonoBehaviour
     }
     private void OnMouseExit()
     {
+        onMouse = false;
         if(gameObject.GetComponent<Rigidbody2D>() == null)
         {
             gameObject.AddComponent<Rigidbody2D>();
@@ -281,7 +284,7 @@ public class Item : MonoBehaviour
             
             IPScript.couldBuy = true;  
 
-            if(canStore)
+            if(canStore && onMouse)
             {
                 Vector3Int cellPos = hiveGrid.WorldToCell(transform.position);
 
