@@ -11,6 +11,7 @@ TagManager:
   - HC
   - SM
   - Item
+  - HCGrid
   layers:
   - Default
   - TransparentFX
