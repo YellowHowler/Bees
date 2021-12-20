@@ -158,7 +158,7 @@ public class Item : MonoBehaviour
                     storageM = HCScript.nectarCapacityM;
             
                     GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, location);
                 }
                 break;
             case 2f:
@@ -179,7 +179,7 @@ public class Item : MonoBehaviour
                     storageM = HCScript.pollenCapacityM;
             
                     GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, location);
                 }
                 break;
         }
@@ -189,6 +189,8 @@ public class Item : MonoBehaviour
         storage = storageM == 0 ? Mathf.RoundToInt(storage) : Mathf.Round(storage * 100.0f) * 0.01f;
         
         valueText.text = storage.ToString() + multipliers[(int)storageM];
+
+        Destroy(gameObject, 180f);
     }
 
     private float[] round(float value, float valueM)
@@ -318,6 +320,7 @@ public class Item : MonoBehaviour
                 }
             }
         }
+        
         if(location.Equals(RMScript.GetCurrentRoom()))
         {
             if(gameObject.GetComponent<Rigidbody2D>() == null)
