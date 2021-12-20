@@ -24,28 +24,74 @@ public class Item : MonoBehaviour
     public float storageM{get; set;}
     
     public  bool isMerge {get; set;}
+    private bool canMerge = false;
     private bool canStore = false;
+    private bool isSelected = false;
 
     private string location;
 
+    private void OnMouseEnter()
+    {
+        if(Input.GetMouseButton(0))   
+        {
+            Destroy(rgbody);
+        }
+    }
     private void OnMouseDrag()
     {
-        rgbody.isKinematic = true;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if(mousePos.y > -3.46f) transform.position = mousePos;
         IPScript.couldBuy = false;
+        isSelected = true;
     }
     private void OnMouseExit()
     {
-        rgbody.isKinematic = false;
+        if(gameObject.GetComponent<Rigidbody2D>() == null)
+        {
+            gameObject.AddComponent<Rigidbody2D>();
+            rgbody = gameObject.GetComponent<Rigidbody2D>();
+        }
         IPScript.couldBuy = true;
+        canStore = true;
+    }
+
+    public bool checkExceed()
+    {
+        switch(type)
+        {
+            case 0f:
+                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage >= HCScript.honeyCapacity))
+                {
+                    return true;
+                }
+                break;
+            case 1f:
+                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage >= HCScript.nectarCapacity))
+                {
+                    return true;
+                }
+                break;
+            case 2f:
+                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage >= HCScript.pollenCapacity))
+                {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
     }
 
     public void setItem(float[] setup, string loc)
     {
         isMerge = true;
         rgbody = gameObject.GetComponent<Rigidbody2D>();
-        rgbody.isKinematic = false;
+
+        if(gameObject.GetComponent<Rigidbody2D>() == null)
+        {
+            gameObject.AddComponent<Rigidbody2D>();
+            rgbody = gameObject.GetComponent<Rigidbody2D>();
+        }
 
         location = loc;
 
@@ -54,6 +100,11 @@ public class Item : MonoBehaviour
         storage = setup[1];
         storageM = setup[2];
 
+        if(storage <= 0f)
+        {
+            Destroy(gameObject);
+        }
+
         gameObject.GetComponent<SpriteRenderer>().sprite = itemSprite[(int)type];
         valueText.text = storage.ToString() + multipliers[(int)storageM];
 
@@ -61,28 +112,136 @@ public class Item : MonoBehaviour
         RMScript = GameObject.FindWithTag("RM").GetComponent<RoomManager>();
         HCScript = GameObject.FindWithTag("HC").GetComponent<HoneycombManager>();
         hiveGrid = GameObject.FindWithTag("HCGrid").GetComponent<Tilemap>();
+
+        float[] roundedValues = round(storage, storageM);
+        storage = roundedValues[0];
+        storageM = (int)roundedValues[1];
+
+        switch(type)
+        {
+            case 0f:
+                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage > HCScript.honeyCapacity))
+                {
+                    float colliderScaleY = gameObject.transform.lossyScale.y / 2;
+                    float colliderPositionY = gameObject.transform.position.y;
+                    colliderPositionY += colliderScaleY;
+                                
+                    float spawnObjectScaleY = gameObject.transform.lossyScale.y / 2;
+                                
+                    spawnObjectScaleY += colliderPositionY;
+            
+                    float save = storage;
+                    float saveM = storageM;
+
+                    storage = HCScript.honeyCapacity;
+                    storageM = HCScript.honeyCapacityM;
+            
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                }
+                break;
+            case 1f:
+                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage > HCScript.nectarCapacity))
+                {
+                    float colliderScaleY = gameObject.transform.lossyScale.y / 2;
+                    float colliderPositionY = gameObject.transform.position.y;
+                    colliderPositionY += colliderScaleY;
+                                
+                    float spawnObjectScaleY = gameObject.transform.lossyScale.y / 2;
+                                
+                    spawnObjectScaleY += colliderPositionY;
+            
+                    float save = storage;
+                    float saveM = storageM;
+
+                    storage = HCScript.nectarCapacity;
+                    storageM = HCScript.nectarCapacityM;
+            
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                }
+                break;
+            case 2f:
+                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage > HCScript.pollenCapacity))
+                {
+                    float colliderScaleY = gameObject.transform.lossyScale.y / 2;
+                    float colliderPositionY = gameObject.transform.position.y;
+                    colliderPositionY += colliderScaleY;
+                                
+                    float spawnObjectScaleY = gameObject.transform.lossyScale.y / 2;
+                                
+                    spawnObjectScaleY += colliderPositionY;
+
+                    float save = storage;
+                    float saveM = storageM;
+
+                    storage = HCScript.pollenCapacity;
+                    storageM = HCScript.pollenCapacityM;
+            
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                }
+                break;
+        }
+
+        canMerge = true;
+
+        storage = storageM == 0 ? Mathf.RoundToInt(storage) : Mathf.Round(storage * 100.0f) * 0.01f;
+        
+        valueText.text = storage.ToString() + multipliers[(int)storageM];
+    }
+
+    private float[] round(float value, float valueM)
+    {
+        bool isRounding = true;
+
+        float v = value;
+        float vM = valueM;
+
+        if(value <= 0f)
+        {
+            return new float[]{0f, valueM};
+        }
+
+        while(isRounding)
+        {
+            isRounding = false;
+
+            if(v >= 1000f)
+            {
+                v /= 1000f;
+                vM++;
+                isRounding = true;
+            }
+            else if(value < 1f)
+            {
+                v *= 1000f;
+                vM--;
+                isRounding = true;
+            }
+            else
+            {
+                isRounding = false;
+            }
+        }  
+
+        return new float[]{v, vM};
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         canStore = true;
-        Debug.Log("collided");
-        if(col.gameObject.CompareTag("Item") && col.gameObject.GetComponent<Item>().type == type)
+        
+        if(canMerge && col.gameObject.CompareTag("Item") && col.gameObject.GetComponent<Item>().type == type && !checkExceed() && !(col.gameObject.GetComponent<Item>().checkExceed()))
         {
+            Debug.Log("collided");
             Item ITScript = col.gameObject.GetComponent<Item>();
             float newStorage = ITScript.storage + storage * (float)Math.Pow(1000, -ITScript.storageM + storageM);
             float newStorageM = ITScript.storageM;
 
-            if(newStorage >= 1000f)
-            {
-                newStorage /= 1000f;
-                newStorageM++;
-            }
-            else if(newStorage < 1f)
-            {
-                newStorage *= 1000f;
-                newStorageM--;
-            }
+            float[] roundedValues = round(newStorage, newStorageM);
+            newStorage = roundedValues[0];
+            newStorageM = (int)roundedValues[1];
 
             if(isMerge)
             {
@@ -103,10 +262,22 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.rotation = Quaternion.identity;
+
+        if(transform.position.y < -3.46f)
+        {
+            transform.position = new Vector3(transform.position.x, -3.46f, 0);
+        }
+
         if(Input.GetMouseButtonUp(0))
         {
-            rgbody.isKinematic = false;
-            IPScript.couldBuy = true;
+            if(gameObject.GetComponent<Rigidbody2D>() == null)
+            {
+                gameObject.AddComponent<Rigidbody2D>();
+                rgbody = gameObject.GetComponent<Rigidbody2D>();
+            }
+            
+            IPScript.couldBuy = true;  
 
             if(canStore)
             {
@@ -149,15 +320,22 @@ public class Item : MonoBehaviour
         }
         if(location.Equals(RMScript.GetCurrentRoom()))
         {
-            rgbody.isKinematic = false;
-            gameObject.active = true;
+            if(gameObject.GetComponent<Rigidbody2D>() == null)
+            {
+                gameObject.AddComponent<Rigidbody2D>();
+                rgbody = gameObject.GetComponent<Rigidbody2D>();
+            }
+
+            gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            valueText.gameObject.SetActive(true);
         }
         else
         {
             transform.position = new Vector3(transform.position.x, -3.46f, 0);
-            rgbody.isKinematic = true;
+            Destroy(rgbody);
             IPScript.couldBuy = true;
-            gameObject.active = false;
+            gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            valueText.gameObject.SetActive(false);
         }
     }
 }

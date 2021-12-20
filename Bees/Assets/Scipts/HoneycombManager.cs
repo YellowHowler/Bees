@@ -61,12 +61,12 @@ public class HoneycombManager : MonoBehaviour
     private int pollenM;
     private int waxM;
 
-    private float honeyCapacity = 5;
-    private int honeyCapacityM = 1;
-    private float nectarCapacity = 5;
-    private int nectarCapacityM = 1;
-    private float pollenCapacity = 50;
-    private int pollenCapacityM = 1;
+    public float honeyCapacity{get;set;}
+    public int honeyCapacityM{get;set;}
+    public float nectarCapacity{get;set;}
+    public int nectarCapacityM{get;set;}
+    public float pollenCapacity{get;set;}
+    public int pollenCapacityM{get;set;}
 
     private string HCPriceStr;
 
@@ -94,6 +94,14 @@ public class HoneycombManager : MonoBehaviour
 
     void Awake()
     {
+        honeyCapacity = 5;
+        honeyCapacityM = 1;
+        nectarCapacity = 5;
+        nectarCapacityM = 1;
+        pollenCapacity = 50;
+        pollenCapacityM = 1;
+
+
         HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
         SMScript = StorageManager.GetComponent<StorageManager>();
         IPScript = InputManager.GetComponent<InputManager>();
@@ -141,6 +149,43 @@ public class HoneycombManager : MonoBehaviour
     void Update()
     {
         mouseTilePos = IPScript.getMouseTilePos();
+    }
+
+    private float[] round(float value, float valueM)
+    {
+        bool isRounding = true;
+
+        float v = value;
+        float vM = valueM;
+
+        if(value <= 0f)
+        {
+            return new float[]{0f, valueM};
+        }
+
+        while(isRounding)
+        {
+            isRounding = false;
+
+            if(v >= 1000f)
+            {
+                v /= 1000f;
+                vM++;
+                isRounding = true;
+            }
+            else if(value < 1f)
+            {
+                v *= 1000f;
+                vM--;
+                isRounding = true;
+            }
+            else
+            {
+                isRounding = false;
+            }
+        }  
+
+        return new float[]{v, vM};
     }
 
     public void setNectarStorage(int index)
@@ -270,16 +315,10 @@ public class HoneycombManager : MonoBehaviour
     {
         honeyStorage[index] += honey * (float)Math.Pow(1000, -honeyStorageM[index] + honeyM);
 
-        if(honeyStorage[index] >= 1000)
-        {
-            honeyStorage[index] /= 1000;
-            honeyStorageM[index]++;
-        }
-        if(honeyStorage[index] < 1f && honeyStorageM[index] != 0)
-        {
-            honeyStorage[index] *= 1000;
-            honeyStorageM[index]--;
-        }
+        float[] roundedValues = round(honeyStorage[index], honeyStorageM[index]);
+        honeyStorage[index] = roundedValues[0];
+        honeyStorageM[index] = (int)roundedValues[1];
+
         if(honeyStorage[index] <= 0f)
         {
             honeyStorage[index] = 0f;
@@ -310,16 +349,10 @@ public class HoneycombManager : MonoBehaviour
     {
         nectarStorage[index] = nectarStorage[index] + nectar * (float)Math.Pow(1000, -nectarStorageM[index] + nectarM);
 
-        if(nectarStorage[index] >= 1000)
-        {
-            nectarStorage[index] /= 1000;
-            nectarStorageM[index]++;
-        }
-        if(nectarStorage[index] < 1f && nectarStorageM[index] != 0)
-        {
-            nectarStorage[index] *= 1000;
-            nectarStorageM[index]--;
-        }
+        float[] roundedValues = round(nectarStorage[index], nectarStorageM[index]);
+        nectarStorage[index] = roundedValues[0];
+        nectarStorageM[index] = (int)roundedValues[1];
+
         if(nectarStorage[index] <= 0f)
         {
             nectarStorage[index] = 0f;
@@ -363,16 +396,10 @@ public class HoneycombManager : MonoBehaviour
     {
         pollenStorage[index] = pollenStorage[index] + pollen * (float)Math.Pow(1000, -pollenStorageM[index] + pollenM);
 
-        if(pollenStorage[index] >= 1000)
-        {
-            pollenStorage[index] /= 1000;
-            pollenStorageM[index]++;
-        }
-        if(pollenStorage[index] < 1f && pollenStorageM[index] != 0)
-        {
-            pollenStorage[index] *= 1000;
-            pollenStorageM[index]--;
-        }
+        float[] roundedValues = round(pollenStorage[index], pollenStorageM[index]);
+        pollenStorage[index] = roundedValues[0];
+        pollenStorageM[index] = (int)roundedValues[1];
+
         if(pollenStorage[index] <= 0f)
         {
             pollenStorage[index] = 0f;

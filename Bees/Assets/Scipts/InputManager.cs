@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
     RoomManager RMScript;
 
     public bool couldBuy {get;set;}
+    public bool isSelected{get;set;}
 
     private string HCPriceStr;
 
@@ -59,6 +60,7 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
+        isSelected = false;
         camera = Camera.main;
         couldBuy = true;
 
@@ -143,7 +145,7 @@ public class InputManager : MonoBehaviour
 
                     float[] itemStorage = HCScript.getStorageHC(index, true);
                     Debug.Log("storage: " + itemStorage[0]);
-                    if(itemStorage[1] > 0f)
+                    if(itemStorage[1] > 0f && !isSelected)
                     {
                         GameObject newItem = Instantiate(item, BGGrid.GetCellCenterWorld(mouseTilePos), Quaternion.identity);
                         newItem.GetComponent<Item>().setItem(itemStorage, RMScript.GetCurrentRoom());
