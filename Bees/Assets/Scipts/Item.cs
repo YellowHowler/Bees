@@ -221,7 +221,9 @@ public class Item : MonoBehaviour
         canMerge = true;
 
         storage = storageM == 0 ? Mathf.RoundToInt(storage) : Mathf.Round(storage * 100.0f) * 0.01f;
-        
+        roundedValues = round(storage, storageM);
+        storage = roundedValues[0];
+        storageM = (int)roundedValues[1];
         valueText.text = storage.ToString() + multipliers[(int)storageM];
 
         Destroy(gameObject, 180f);
@@ -239,7 +241,7 @@ public class Item : MonoBehaviour
             return new float[]{0f, valueM};
         }
 
-        while(isRounding)
+        for(int i = 0; i < 10; i++)
         {
             isRounding = false;
 

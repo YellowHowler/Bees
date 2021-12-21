@@ -71,7 +71,7 @@ public class InventoryManager : MonoBehaviour
             return new float[]{0f, valueM};
         }
 
-        while(isRounding)
+        for(int i = 0; i < 10; i++)
         {
             isRounding = false;
 
