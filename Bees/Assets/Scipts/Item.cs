@@ -14,6 +14,7 @@ public class Item : MonoBehaviour
     InputManager IPScript;
     RoomManager RMScript;
     HoneycombManager HCScript;
+    InventoryManager IVScript;
 
     Tilemap hiveGrid;
 
@@ -26,6 +27,7 @@ public class Item : MonoBehaviour
     public  bool isMerge {get; set;}
     private bool canMerge = false;
     private bool canStore = false;
+    private bool isDrag = false;
     private bool isSelected = false;
     private bool onMouse = false;
 
@@ -41,8 +43,9 @@ public class Item : MonoBehaviour
     }
     private void OnMouseDrag()
     {
+        isDrag = true;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if(mousePos.y > -3.46f) transform.position = mousePos;
+        transform.position = mousePos;
         IPScript.couldBuy = false;
         isSelected = true;
     }
@@ -113,6 +116,7 @@ public class Item : MonoBehaviour
 
         IPScript = GameObject.FindWithTag("IN").GetComponent<InputManager>();
         RMScript = GameObject.FindWithTag("RM").GetComponent<RoomManager>();
+        IVScript = GameObject.FindWithTag("IV").GetComponent<InventoryManager>();
         HCScript = GameObject.FindWithTag("HC").GetComponent<HoneycombManager>();
         hiveGrid = GameObject.FindWithTag("HCGrid").GetComponent<Tilemap>();
 
@@ -139,8 +143,8 @@ public class Item : MonoBehaviour
                     storage = HCScript.honeyCapacity;
                     storageM = HCScript.honeyCapacityM;
             
-                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.honeyCapacity * (float)Math.Pow(1000, HCScript.honeyCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
                 }
                 break;
             case 1f:
@@ -160,8 +164,8 @@ public class Item : MonoBehaviour
                     storage = HCScript.nectarCapacity;
                     storageM = HCScript.nectarCapacityM;
             
-                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, location);
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.nectarCapacity * (float)Math.Pow(1000, HCScript.nectarCapacityM - saveM), storageM}, location);
                 }
                 break;
             case 2f:
@@ -181,7 +185,7 @@ public class Item : MonoBehaviour
                     storage = HCScript.pollenCapacity;
                     storageM = HCScript.pollenCapacityM;
             
-                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, transform.position.z), Quaternion.identity);
+                    GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
                     newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, location);
                 }
                 break;
@@ -269,13 +273,15 @@ public class Item : MonoBehaviour
     {
         transform.rotation = Quaternion.identity;
 
-        if(transform.position.y < -3.46f)
+        if(!isDrag && transform.position.y < -3.46f)
         {
             transform.position = new Vector3(transform.position.x, -3.46f, 0);
         }
 
         if(Input.GetMouseButtonUp(0))
         {
+            isDrag = false;
+
             if(gameObject.GetComponent<Rigidbody2D>() == null)
             {
                 gameObject.AddComponent<Rigidbody2D>();
@@ -283,6 +289,14 @@ public class Item : MonoBehaviour
             }
             
             IPScript.couldBuy = true;  
+
+            if(onMouse && !checkExceed() && IVScript.getHovered() != -1 && (IVScript.getItem(IVScript.getHovered())[0] == type || IVScript.getItem(IVScript.getHovered())[0] == -1) && !IVScript.checkExceed(IVScript.getHovered()))
+            {
+                int index = IVScript.getHovered();
+                float[] invenItem = IVScript.getItem(index);
+                IVScript.addItem(new float[]{type, storage + invenItem[1] * (float)Math.Pow(1000, invenItem[2] - storageM), storageM}, IVScript.getHovered());
+                Destroy(gameObject);
+            }
 
             if(canStore && onMouse)
             {
