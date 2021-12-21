@@ -88,6 +88,33 @@ public class Item : MonoBehaviour
         return false;
     }
 
+    public bool checkExceedWOEqual()
+    {
+        switch(type)
+        {
+            case 0f:
+                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage > HCScript.honeyCapacity))
+                {
+                    return true;
+                }
+                break;
+            case 1f:
+                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage > HCScript.nectarCapacity))
+                {
+                    return true;
+                }
+                break;
+            case 2f:
+                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage > HCScript.pollenCapacity))
+                {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
     public void setItem(float[] setup, string loc)
     {
         isMerge = true;
@@ -290,11 +317,12 @@ public class Item : MonoBehaviour
             
             IPScript.couldBuy = true;  
 
-            if(onMouse && !checkExceed() && IVScript.getHovered() != -1 && (IVScript.getItem(IVScript.getHovered())[0] == type || IVScript.getItem(IVScript.getHovered())[0] == -1) && !IVScript.checkExceed(IVScript.getHovered()))
+            if(onMouse && !checkExceedWOEqual() && IVScript.getHovered() != -1 && (IVScript.getItem(IVScript.getHovered())[0] == type || IVScript.getItem(IVScript.getHovered())[0] == -1) && !IVScript.checkExceed(IVScript.getHovered()))
             {
                 int index = IVScript.getHovered();
                 float[] invenItem = IVScript.getItem(index);
                 IVScript.addItem(new float[]{type, storage + invenItem[1] * (float)Math.Pow(1000, invenItem[2] - storageM), storageM}, IVScript.getHovered());
+                IVScript.checkItem(index);
                 Destroy(gameObject);
             }
 

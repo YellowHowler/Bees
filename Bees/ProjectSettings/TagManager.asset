@@ -12,6 +12,7 @@ TagManager:
   - SM
   - Item
   - HCGrid
+  - IV
   layers:
   - Default
   - TransparentFX

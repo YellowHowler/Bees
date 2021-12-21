@@ -125,8 +125,8 @@ public class InventoryManager : MonoBehaviour
                         float save = items[index][1];
                         float saveM = items[index][2];
 
-                        items[index][1] = HCScript.honeyCapacity;
-                        items[index][2] = HCScript.honeyCapacityM;
+                        items[index][1] = HCScript.nectarCapacity;
+                        items[index][2] = HCScript.nectarCapacityM;
                 
                         GameObject newItem = Instantiate(item, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
                         newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HCScript.nectarCapacity * (float)Math.Pow(1000, HCScript.nectarCapacityM - saveM), items[index][2]}, RMScript.GetCurrentRoom());
@@ -138,8 +138,8 @@ public class InventoryManager : MonoBehaviour
                         float save = items[index][1];
                         float saveM = items[index][2];
 
-                        items[index][1] = HCScript.honeyCapacity;
-                        items[index][2] = HCScript.honeyCapacityM;
+                        items[index][1] = HCScript.pollenCapacity;
+                        items[index][2] = HCScript.pollenCapacityM;
                 
                         GameObject newItem = Instantiate(item, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
                         newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), items[index][2]}, RMScript.GetCurrentRoom());
@@ -147,6 +147,8 @@ public class InventoryManager : MonoBehaviour
                     break;
             }
         }
+
+        updateSlots();
     }
 
     public bool checkExceed(int index)
