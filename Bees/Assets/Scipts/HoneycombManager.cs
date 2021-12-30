@@ -94,11 +94,11 @@ public class HoneycombManager : MonoBehaviour
 
     void Awake()
     {
-        honeyCapacity = 5;
+        honeyCapacity = 10;
         honeyCapacityM = 1;
-        nectarCapacity = 5;
+        nectarCapacity = 10;
         nectarCapacityM = 1;
-        pollenCapacity = 50;
+        pollenCapacity = 200;
         pollenCapacityM = 1;
 
 

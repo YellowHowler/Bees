@@ -133,7 +133,7 @@ public class Item : MonoBehaviour
         storage = setup[1];
         storageM = setup[2];
 
-        if(storage <= 0f)
+        if(storage <= 0f || type < 0)
         {
             Destroy(gameObject);
         }

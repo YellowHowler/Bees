@@ -57,6 +57,22 @@ public class InventoryManager : MonoBehaviour
         {
             select[i].SetActive(i == selected || i == hovered);
         }
+
+        if(Input.GetMouseButtonDown(0) && hovered >= 0)
+        {
+            if(items[hovered][1] >= 0)
+            {
+                float spawnYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y + 1;
+                Vector3 spawnPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, spawnYPos, 0);
+                GameObject newItem = Instantiate(item, spawnPos, Quaternion.identity);
+                newItem.GetComponent<Item>().setItem(new float[]{items[hovered][0], items[hovered][1], items[hovered][2]}, "Storage");
+
+                items[hovered][0] = -1;
+                items[hovered][1] = 0;
+
+                updateSlots();
+            }
+        }
     }
 
     private float[] round(float value, float valueM)
