@@ -80,6 +80,7 @@ public class BeeManager : MonoBehaviour
       
        changeJob("flower");
        ani.SetBool("hasPollen", false);
+       ani.SetBool("isStopped", false);
    }
  
    private void hide()
@@ -256,6 +257,8 @@ public class BeeManager : MonoBehaviour
       
        if(newJob.Equals("flower"))
        {
+           ani.SetBool("isStopped", false);
+
            flower = FLScript.getIdleFlower();
  
            if(flower != -1)
@@ -264,6 +267,7 @@ public class BeeManager : MonoBehaviour
            }
            else
            {
+               ani.SetBool("isStopped", true);
                job = "idle";
            }
        }
