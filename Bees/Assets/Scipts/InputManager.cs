@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     [SerializeField] Tilemap hiveGrid;
     [SerializeField] Tilemap buyGrid;
@@ -20,17 +20,11 @@ public class InputManager : MonoBehaviour
     [SerializeField] GameObject HCHovered;
     [SerializeField] GameObject HCPriceObj;
     [SerializeField] GameObject HCPriceTxtObj;
-    [SerializeField] GameObject HCManager;
-    [SerializeField] GameObject StorageManager;
-    [SerializeField] GameObject RoomManager;
     [SerializeField] GameObject BuyHCSliderObj;
     [SerializeField] GameObject item;
     [SerializeField] Slider BuyHCSlider; 
 
     BuyHoneycombText HCPriceTxt;
-    HoneycombManager HCScript;
-    StorageManager SMScript;
-    RoomManager RMScript;
 
     public bool couldBuy {get;set;}
     public bool isSelected{get;set;}
@@ -66,15 +60,12 @@ public class InputManager : MonoBehaviour
 
         resetSlider();
 
+        HCPrice = HoneycombManager.Instance.getHCPrice();
+        HCPriceM = HoneycombManager.Instance.getHCPriceM();
+
         HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
-        HCScript = HCManager.GetComponent<HoneycombManager>();
-        SMScript = StorageManager.GetComponent<StorageManager>();
-        RMScript = RoomManager.GetComponent<RoomManager>();
 
-        HCPrice = HCScript.getHCPrice();
-        HCPriceM = HCScript.getHCPriceM();
-
-        multipliers = SMScript.getMultipliers();
+        multipliers = StorageManager.Instance.getMultipliers();
 
         HCPriceStr = (HCPriceM == 0 ? Mathf.RoundToInt(HCPrice) : Mathf.Round(HCPrice * 100.0f) * 0.01f).ToString() + multipliers[HCPriceM];
         hivePos = new Vector3Int[]{new Vector3Int(-5, 5, 0), new Vector3Int(-4, 5, 0), new Vector3Int(-3, 5, 0), new Vector3Int(-2, 5, 0), new Vector3Int(-5, 4, 0), new Vector3Int(-4, 4, 0), new Vector3Int(-3, 4, 0), new Vector3Int(-2, 4, 0), new Vector3Int(-5, 3, 0), new Vector3Int(-4, 3, 0), new Vector3Int(-3, 3, 0), new Vector3Int(-2, 3, 0)};
@@ -92,7 +83,7 @@ public class InputManager : MonoBehaviour
         
         buyGridPastPos = mouseTilePos;
 
-        if(RMScript.GetCurrentRoom().Equals("Garden"))
+        if(RoomManager.Instance.GetCurrentRoom().Equals("Garden"))
         {
             mouseTilePosHive = HiveGrid.WorldToCell(mouseWorldPos);
             //-4, 5, 0
@@ -102,16 +93,16 @@ public class InputManager : MonoBehaviour
                 HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTileSelected);
                 if(Input.GetMouseButtonDown(0))
                 {
-                    RMScript.SetCurrentRoom("Storage");
+                    RoomManager.Instance.SetCurrentRoom("Storage");
                 }
             }
             else{
                 HiveGrid.SetTile(new Vector3Int(-4, 5, 0), HiveTile);
             }
         }
-        else if(RMScript.GetCurrentRoom().Equals("Storage") || RMScript.GetCurrentRoom().Equals("Machinery"))
+        else if(RoomManager.Instance.GetCurrentRoom().Equals("Storage") || RoomManager.Instance.GetCurrentRoom().Equals("Machinery"))
         {
-            if(!hiveGrid.HasTile(mouseTilePos) && BGGrid.HasTile(mouseTilePos) && mouseTilePos.y >= -2 && RMScript.GetCurrentRoom().Equals("Storage"))
+            if(!hiveGrid.HasTile(mouseTilePos) && BGGrid.HasTile(mouseTilePos) && mouseTilePos.y >= -2 && RoomManager.Instance.GetCurrentRoom().Equals("Storage"))
             {
                 if(BGGrid.HasTile(mouseTilePos))
                 {
@@ -140,25 +131,25 @@ public class InputManager : MonoBehaviour
             {
                 if(hiveGrid.HasTile(mouseTilePos))
                 {
-                    int index = HCScript.findHcPos(mouseTilePos.x, mouseTilePos.y);
+                    int index = HoneycombManager.Instance.findHcPos(mouseTilePos.x, mouseTilePos.y);
                     Debug.Log(index);
 
-                    float[] itemStorage = HCScript.getStorageHC(index, true);
+                    float[] itemStorage = HoneycombManager.Instance.getStorageHC(index, true);
                     Debug.Log("storage: " + itemStorage[0]);
                     if(itemStorage[1] > 0f && !isSelected)
                     {
                         GameObject newItem = Instantiate(item, BGGrid.GetCellCenterWorld(mouseTilePos), Quaternion.identity);
-                        newItem.GetComponent<Item>().setItem(itemStorage, RMScript.GetCurrentRoom());
+                        newItem.GetComponent<Item>().setItem(itemStorage, RoomManager.Instance.GetCurrentRoom());
                         switch(itemStorage[0])
                         {
                             case 0f:
-                                HCScript.changeHoneyStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                HoneycombManager.Instance.changeHoneyStorage(index, -itemStorage[1], (int)itemStorage[2]);
                                 break;
                             case 1f:
-                                HCScript.changeNectarStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                HoneycombManager.Instance.changeNectarStorage(index, -itemStorage[1], (int)itemStorage[2]);
                                 break;
                             case 2f:
-                                HCScript.changePollenStorage(index, -itemStorage[1], (int)itemStorage[2]);
+                                HoneycombManager.Instance.changePollenStorage(index, -itemStorage[1], (int)itemStorage[2]);
                                 break;
                         }
                     }
@@ -181,7 +172,7 @@ public class InputManager : MonoBehaviour
                         if(sliderValue >= 1f)
                         {
                             Debug.Log("buy");
-                            HCScript.buyHC();
+                            HoneycombManager.Instance.buyHC();
                             resetSlider();
                             BuyHCSliderObj.SetActive(false);
                         }

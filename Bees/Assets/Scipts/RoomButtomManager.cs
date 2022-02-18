@@ -7,15 +7,12 @@ using UnityEngine.UI;
 
 public class RoomButtomManager : MonoBehaviour
 {
-    [SerializeField] Text RoomText;
-    [SerializeField] GameObject RoomManager;      
+    [SerializeField] Text RoomText;   
     [SerializeField] string room;
-
-    RoomManager RMScript;
 
     void Awake()
     {
-        RMScript = RoomManager.GetComponent<RoomManager>();
+
     }
 
     public void PointerEnter()
@@ -31,6 +28,6 @@ public class RoomButtomManager : MonoBehaviour
 
     public void PointerClick()
     {
-        RMScript.SetCurrentRoom(room);
+        RoomManager.Instance.SetCurrentRoom(room);
     }
 }

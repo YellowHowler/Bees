@@ -7,11 +7,9 @@ using UnityEngine.Tilemaps;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
-public class HiveBGManager : MonoBehaviour
+public class HiveBGManager : Singleton<HiveBGManager>
 {
     [SerializeField] GameObject honeycombObj;
-    [SerializeField] GameObject InputManager;
-    [SerializeField] GameObject RoomManager;
     [SerializeField] GameObject mouseClickIcon;
     [SerializeField] GameObject RoomButtons;
     [SerializeField] Tilemap BGGrid;
@@ -21,8 +19,6 @@ public class HiveBGManager : MonoBehaviour
     [SerializeField] Tile FloorTile; 
 
     HoneycombManager hiveSC;
-    InputManager IPScript;
-    RoomManager RMScript;
 
     private Vector3Int[] exitPos;
     private Vector3Int mouseTilePos;
@@ -42,8 +38,6 @@ public class HiveBGManager : MonoBehaviour
     void Awake()
     {
         hiveSC = honeycombObj.GetComponent<HoneycombManager>();
-        IPScript = InputManager.GetComponent<InputManager>();
-        RMScript = RoomManager.GetComponent<RoomManager>();
         excessTileNum = 8;
 
         exitPos = new Vector3Int[]{new Vector3Int(-2, -2, 0), new Vector3Int(-1, -2, 0), new Vector3Int(-2, -1, 0), new Vector3Int(-2, -3, 0), new Vector3Int(-1, -3, 0), new Vector3Int(-3, -3, 0)};
@@ -77,7 +71,7 @@ public class HiveBGManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouseTilePos = IPScript.getMouseTilePos();
+        mouseTilePos = InputManager.Instance.getMouseTilePos();
 
         if(Array.IndexOf(exitPos, mouseTilePos) > -1)
         {

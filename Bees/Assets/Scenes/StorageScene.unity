@@ -363,6 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a55e276c1c58247479821960e95ea0b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   hiveGrid: {fileID: 1995369182}
   buyGrid: {fileID: 1456966053}
   BGGrid: {fileID: 72668938}
@@ -374,9 +375,6 @@ MonoBehaviour:
   HCHovered: {fileID: 748648420}
   HCPriceObj: {fileID: 1109990721}
   HCPriceTxtObj: {fileID: 1109990721}
-  HCManager: {fileID: 1513854559}
-  StorageManager: {fileID: 1919902513}
-  RoomManager: {fileID: 1542602446}
   BuyHCSliderObj: {fileID: 727728991}
   item: {fileID: 8017101183838965685, guid: 6f2ab1cbb6ac6424491602804878d59e, type: 3}
   BuyHCSlider: {fileID: 727728993}
@@ -805,7 +803,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 110}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 90, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &95255459
@@ -970,12 +968,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27eea46516ca64634a314ba780b65aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   BGGrid: {fileID: 1656086378}
   FlowerGrid: {fileID: 1265709218}
   FlowerGridTemp: {fileID: 1815490831}
   honeycombObj: {fileID: 1513854559}
-  RoomManager: {fileID: 1542602446}
-  FlowerManager: {fileID: 792304301}
   horizontalResolution: 1920
   ScrollSpeed: 15
 --- !u!4 &141514019
@@ -991,6 +988,104 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &177268426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 177268429}
+  - component: {fileID: 177268428}
+  - component: {fileID: 177268427}
+  m_Layer: 0
+  m_Name: queenEggReady2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &177268427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177268426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8575213c28817464d935791b021bb81e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  degreesPerSecond: 15
+  amplitude: 0.2
+  frequency: 1
+--- !u!212 &177268428
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177268426}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1105602239
+  m_SortingLayer: 6
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 79a5f0db71eb94bf5a59f9397a009cf2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.09, y: 0.11}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &177268429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177268426}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1201628254}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &184965582
 GameObject:
@@ -1217,7 +1312,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoomText: {fileID: 362205905}
-  RoomManager: {fileID: 1542602446}
   room: Machinery
 --- !u!114 &197531748
 MonoBehaviour:
@@ -1487,7 +1581,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoomText: {fileID: 362205905}
-  RoomManager: {fileID: 1542602446}
   room: Garden
 --- !u!114 &250109667
 MonoBehaviour:
@@ -2931,6 +3024,7 @@ GameObject:
   m_Component:
   - component: {fileID: 748648422}
   - component: {fileID: 748648421}
+  - component: {fileID: 748648423}
   m_Layer: 0
   m_Name: honeycomb_hovered
   m_TagString: Untagged
@@ -3003,6 +3097,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748648423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748648420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a783790b84734d019478ec998843574, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &755916008
 GameObject:
   m_ObjectHideFlags: 0
@@ -3112,11 +3218,11 @@ RectTransform:
   m_Children:
   - {fileID: 76758859}
   m_Father: {fileID: 1201628254}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.5627208, y: -0.38767326}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1788, y: 1544}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &759280540
@@ -3132,7 +3238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
+  m_BlockingObjects: 3
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -3177,7 +3283,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: -408164227
+  m_SortingLayerID: -1105602239
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &792304301
@@ -3209,6 +3315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1c15c73b85d49638beeefe28768a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   FlowerGrid: {fileID: 1265709218}
   FlowerGridTemp: {fileID: 1815490831}
   flowerTiles:
@@ -3488,7 +3595,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1201628254}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &982592596
 GameObject:
@@ -3912,6 +4019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db883ce8725465e8a768b68811bb03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   inventory:
   - {fileID: 1440095116}
   - {fileID: 1192377136}
@@ -3932,6 +4040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1109990722}
   - component: {fileID: 1109990723}
+  - component: {fileID: 1109990724}
   m_Layer: 5
   m_Name: HoneycombPriceLabel
   m_TagString: Untagged
@@ -3967,6 +4076,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HCPriceTxt: {fileID: 615070137}
+--- !u!114 &1109990724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109990721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a783790b84734d019478ec998843574, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1124503139
 GameObject:
   m_ObjectHideFlags: 0
@@ -4193,9 +4314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ea6af4bbfd4840a986b82705b96c004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   honeycombObj: {fileID: 1513854559}
-  InputManager: {fileID: 63578275}
-  RoomManager: {fileID: 1542602446}
   mouseClickIcon: {fileID: 553720624}
   RoomButtons: {fileID: 11274362}
   BGGrid: {fileID: 72668938}
@@ -4482,6 +4602,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1201628254}
   - component: {fileID: 1201628253}
+  - component: {fileID: 1201628255}
   m_Layer: 0
   m_Name: queenbeeObject
   m_TagString: Untagged
@@ -4503,6 +4624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beeObj: {fileID: 958764775}
   eggSlider: {fileID: 76758858}
+  eggReadySign: {fileID: 177268426}
 --- !u!4 &1201628254
 Transform:
   m_ObjectHideFlags: 0
@@ -4511,14 +4633,41 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201628252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2, y: -0.36, z: 0}
+  m_LocalPosition: {x: -0.2, y: 1.432, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 177268429}
   - {fileID: 759280539}
   - {fileID: 958764778}
   m_Father: {fileID: 0}
   m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1201628255
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201628252}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1.5}
+  m_EdgeRadius: 0
 --- !u!1 &1225292423
 GameObject:
   m_ObjectHideFlags: 0
@@ -4552,7 +4701,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4581,7 +4730,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -5432,6 +5581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c1abf9f111c4b7fa051ff5f2f0830f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   hiveGrid: {fileID: 1995369182}
   buyGrid: {fileID: 1456966053}
   BGGrid: {fileID: 72668938}
@@ -5470,10 +5620,6 @@ MonoBehaviour:
   buyTileEmpty: {fileID: 11400000, guid: c342de4b98c094cb28910eed543211dd, type: 2}
   HCPriceObj: {fileID: 1109990721}
   HCPriceTxtObj: {fileID: 1109990721}
-  StorageManager: {fileID: 1919902513}
-  InputManager: {fileID: 63578275}
-  BGManager: {fileID: 1159176351}
-  CameraManager: {fileID: 141514017}
 --- !u!4 &1513854561
 Transform:
   m_ObjectHideFlags: 0
@@ -5517,6 +5663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a572e7c502191441f86542cc42b266a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   RoomManager: {fileID: 1542602446}
   HiveGrid: {fileID: 1956766333}
   hiveTile: {fileID: 11400000, guid: cff247db381884bc3ac528afaccc6e71, type: 2}
@@ -5563,11 +5710,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35fe1aba111924245974483017bc34fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   StorageGrid: {fileID: 1142249588}
   GardenGrid: {fileID: 1645105872}
   HiveBGGrid: {fileID: 919841935}
   Transition: {fileID: 2633764741666964478, guid: ab73e649b313f4d01a5697c1e108b0cc, type: 3}
-  CameraManager: {fileID: 141514017}
 --- !u!4 &1542602448
 Transform:
   m_ObjectHideFlags: 0
@@ -6978,6 +7125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1524531d2e02a4d4b853e90fcc4168ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   honeyText: {fileID: 990680217}
   nectarText: {fileID: 1878212621}
   pollenText: {fileID: 982592598}
@@ -7416,7 +7564,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoomText: {fileID: 362205905}
-  RoomManager: {fileID: 1542602446}
   room: Storage
 --- !u!114 &2029848237
 MonoBehaviour:

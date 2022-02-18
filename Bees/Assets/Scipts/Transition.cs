@@ -17,6 +17,8 @@ public class Transition : MonoBehaviour
     void Start()
     {
         transite();
+
+        Destroy(gameObject, 3.0f);
     }
     
     void Update () {

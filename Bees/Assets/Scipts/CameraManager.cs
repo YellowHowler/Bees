@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEditor;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : Singleton<CameraManager>
 {
     Camera camera;
 
@@ -13,12 +13,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField] Tilemap FlowerGrid;
     [SerializeField] Tilemap FlowerGridTemp;
     [SerializeField] GameObject honeycombObj;
-    [SerializeField] GameObject RoomManager;
-    [SerializeField] GameObject FlowerManager;
-
-    HoneycombManager hiveSC;
-    RoomManager RMScript;
-    FlowerManager FLScript;
 
     private Vector3 bgZeroPos;
 
@@ -48,6 +42,9 @@ public class CameraManager : MonoBehaviour
     private int gardenLeft;
     private int gardenRight;
 
+    private bool isFollowing = false;
+    public GameObject followingObj{get;set;}
+
     float temp;
 
     void Awake()
@@ -57,22 +54,17 @@ public class CameraManager : MonoBehaviour
         cameraSize = horizontalResolution / (350);
         camera.orthographicSize = cameraSize;
 
-        hiveSC = honeycombObj.GetComponent<HoneycombManager>();
-        RMScript = RoomManager.GetComponent<RoomManager>();
-        FLScript = FlowerManager.GetComponent<FlowerManager>();
-
         temp = camera.ScreenToWorldPoint(new Vector3((Screen.width - 1400)/2, 0, 0)).x - camera.ScreenToWorldPoint(new Vector3(0, 0, 0)).x;
-        Debug.Log("temp:" + temp);
     }
 
     public void setBound()
     {
-        left = hiveSC.getLeft();
-        right = hiveSC.getRight();
-        up = hiveSC.getUp();
-        down = hiveSC.getDown();
+        left = HoneycombManager.Instance.getLeft();
+        right = HoneycombManager.Instance.getRight();
+        up = HoneycombManager.Instance.getUp();
+        down = HoneycombManager.Instance.getDown();
 
-        gardenRight = FLScript.getFlowerNum() * 2;
+        gardenRight = FlowerManager.Instance.getFlowerNum() * 2;
 
         leftBound = BGGrid.GetCellCenterWorld(new Vector3Int(left, 0, 0)).x;
         rightBound = BGGrid.GetCellCenterWorld(new Vector3Int(right, 0, 0)).x;
@@ -87,7 +79,7 @@ public class CameraManager : MonoBehaviour
 
     void Start()
     {
-        hcNum = hiveSC.getHoneycombNum();
+        hcNum = HoneycombManager.Instance.getHoneycombNum();
         
         setBound();
 
@@ -105,44 +97,70 @@ public class CameraManager : MonoBehaviour
     public float getTemp() {return leftBoundGarden - offSetX - 0.65f + temp;}
     void Update()
     {   
-        if(RMScript.GetCurrentRoom().Equals("Storage"))
+        if(isFollowing)
+        {
+            camera.transform.position = new Vector3(followingObj.transform.position.x, followingObj.transform.position.y, -10);
+        }
+        if(RoomManager.Instance.GetCurrentRoom().Equals("Storage"))
         {
             if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBound + offSetX)
             {
                 camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBound - offSetX)
             {
                 camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBound + offSetY)
             {
                 camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBound - offSetY)
             {
                 camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
         }  
-        else if(RMScript.GetCurrentRoom().Equals("Garden"))
+        else if(RoomManager.Instance.GetCurrentRoom().Equals("Garden"))
         {
             if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBoundGarden + offSetX - 1f)
             {
                 camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBoundGarden - offSetX - 0.65f + temp)
             {
                 Debug.Log("left");
                 camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBoundGarden + offSetY - 0.4f)
             {
                 camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
             else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBoundGarden - offSetY)
             {
                 camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
+                isFollowing = false;
             }
         }   
     } 
+
+    
+    public void FollowBee(GameObject follow)
+    {
+        Debug.Log("follow");
+        followingObj = follow;
+        isFollowing = true;
+    }
+
+    public void RoomChange()
+    {
+        isFollowing = false;
+        followingObj = null;
+    }
 }

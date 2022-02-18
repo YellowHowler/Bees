@@ -11,11 +11,6 @@ public class Item : MonoBehaviour
     [SerializeField] Text valueText;
     [SerializeField] Sprite[] itemSprite;
 
-    InputManager IPScript;
-    RoomManager RMScript;
-    HoneycombManager HCScript;
-    InventoryManager IVScript;
-
     Tilemap hiveGrid;
 
     Rigidbody2D rgbody;
@@ -46,7 +41,7 @@ public class Item : MonoBehaviour
         isDrag = true;
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = mousePos;
-        IPScript.couldBuy = false;
+        InputManager.Instance.couldBuy = false;
         isSelected = true;
     }
     private void OnMouseExit()
@@ -57,7 +52,7 @@ public class Item : MonoBehaviour
             gameObject.AddComponent<Rigidbody2D>();
             rgbody = gameObject.GetComponent<Rigidbody2D>();
         }
-        IPScript.couldBuy = true;
+        InputManager.Instance.couldBuy = true;
         canStore = true;
     }
 
@@ -66,19 +61,19 @@ public class Item : MonoBehaviour
         switch(type)
         {
             case 0f:
-                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage >= HCScript.honeyCapacity))
+                if(storageM > HoneycombManager.Instance.honeyCapacityM || (storageM == HoneycombManager.Instance.honeyCapacityM && storage >= HoneycombManager.Instance.honeyCapacity))
                 {
                     return true;
                 }
                 break;
             case 1f:
-                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage >= HCScript.nectarCapacity))
+                if(storageM > HoneycombManager.Instance.nectarCapacityM || (storageM == HoneycombManager.Instance.nectarCapacityM && storage >= HoneycombManager.Instance.nectarCapacity))
                 {
                     return true;
                 }
                 break;
             case 2f:
-                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage >= HCScript.pollenCapacity))
+                if(storageM > HoneycombManager.Instance.pollenCapacityM || (storageM == HoneycombManager.Instance.pollenCapacityM && storage >= HoneycombManager.Instance.pollenCapacity))
                 {
                     return true;
                 }
@@ -93,19 +88,19 @@ public class Item : MonoBehaviour
         switch(type)
         {
             case 0f:
-                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage > HCScript.honeyCapacity))
+                if(storageM > HoneycombManager.Instance.honeyCapacityM || (storageM == HoneycombManager.Instance.honeyCapacityM && storage > HoneycombManager.Instance.honeyCapacity))
                 {
                     return true;
                 }
                 break;
             case 1f:
-                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage > HCScript.nectarCapacity))
+                if(storageM > HoneycombManager.Instance.nectarCapacityM || (storageM == HoneycombManager.Instance.nectarCapacityM && storage > HoneycombManager.Instance.nectarCapacity))
                 {
                     return true;
                 }
                 break;
             case 2f:
-                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage > HCScript.pollenCapacity))
+                if(storageM > HoneycombManager.Instance.pollenCapacityM || (storageM == HoneycombManager.Instance.pollenCapacityM && storage > HoneycombManager.Instance.pollenCapacity))
                 {
                     return true;
                 }
@@ -141,10 +136,6 @@ public class Item : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().sprite = itemSprite[(int)type];
         valueText.text = storage.ToString() + multipliers[(int)storageM];
 
-        IPScript = GameObject.FindWithTag("IN").GetComponent<InputManager>();
-        RMScript = GameObject.FindWithTag("RM").GetComponent<RoomManager>();
-        IVScript = GameObject.FindWithTag("IV").GetComponent<InventoryManager>();
-        HCScript = GameObject.FindWithTag("HC").GetComponent<HoneycombManager>();
         hiveGrid = GameObject.FindWithTag("HCGrid").GetComponent<Tilemap>();
 
         float[] roundedValues = round(storage, storageM);
@@ -154,7 +145,7 @@ public class Item : MonoBehaviour
         switch(type)
         {
             case 0f:
-                if(storageM > HCScript.honeyCapacityM || (storageM == HCScript.honeyCapacityM && storage > HCScript.honeyCapacity))
+                if(storageM > HoneycombManager.Instance.honeyCapacityM || (storageM == HoneycombManager.Instance.honeyCapacityM && storage > HoneycombManager.Instance.honeyCapacity))
                 {
                     float colliderScaleY = gameObject.transform.lossyScale.y / 2;
                     float colliderPositionY = gameObject.transform.position.y;
@@ -167,15 +158,15 @@ public class Item : MonoBehaviour
                     float save = storage;
                     float saveM = storageM;
 
-                    storage = HCScript.honeyCapacity;
-                    storageM = HCScript.honeyCapacityM;
+                    storage = HoneycombManager.Instance.honeyCapacity;
+                    storageM = HoneycombManager.Instance.honeyCapacityM;
             
                     GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.honeyCapacity * (float)Math.Pow(1000, HCScript.honeyCapacityM - saveM), storageM}, RMScript.GetCurrentRoom());
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HoneycombManager.Instance.honeyCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.honeyCapacityM - saveM), storageM}, RoomManager.Instance.GetCurrentRoom());
                 }
                 break;
             case 1f:
-                if(storageM > HCScript.nectarCapacityM || (storageM == HCScript.nectarCapacityM && storage > HCScript.nectarCapacity))
+                if(storageM > HoneycombManager.Instance.nectarCapacityM || (storageM == HoneycombManager.Instance.nectarCapacityM && storage > HoneycombManager.Instance.nectarCapacity))
                 {
                     float colliderScaleY = gameObject.transform.lossyScale.y / 2;
                     float colliderPositionY = gameObject.transform.position.y;
@@ -188,15 +179,15 @@ public class Item : MonoBehaviour
                     float save = storage;
                     float saveM = storageM;
 
-                    storage = HCScript.nectarCapacity;
-                    storageM = HCScript.nectarCapacityM;
+                    storage = HoneycombManager.Instance.nectarCapacity;
+                    storageM = HoneycombManager.Instance.nectarCapacityM;
             
                     GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.nectarCapacity * (float)Math.Pow(1000, HCScript.nectarCapacityM - saveM), storageM}, location);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HoneycombManager.Instance.nectarCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.nectarCapacityM - saveM), storageM}, location);
                 }
                 break;
             case 2f:
-                if(storageM > HCScript.pollenCapacityM || (storageM == HCScript.pollenCapacityM && storage > HCScript.pollenCapacity))
+                if(storageM > HoneycombManager.Instance.pollenCapacityM || (storageM == HoneycombManager.Instance.pollenCapacityM && storage > HoneycombManager.Instance.pollenCapacity))
                 {
                     float colliderScaleY = gameObject.transform.lossyScale.y / 2;
                     float colliderPositionY = gameObject.transform.position.y;
@@ -209,11 +200,11 @@ public class Item : MonoBehaviour
                     float save = storage;
                     float saveM = storageM;
 
-                    storage = HCScript.pollenCapacity;
-                    storageM = HCScript.pollenCapacityM;
+                    storage = HoneycombManager.Instance.pollenCapacity;
+                    storageM = HoneycombManager.Instance.pollenCapacityM;
             
                     GameObject newItem = Instantiate(item, new Vector3(transform.position.x, spawnObjectScaleY + 0.1f, 0), Quaternion.identity);
-                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), storageM}, location);
+                    newItem.GetComponent<Item>().setItem(new float[]{type, save - HoneycombManager.Instance.pollenCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.pollenCapacityM - saveM), storageM}, location);
                 }
                 break;
         }
@@ -317,14 +308,14 @@ public class Item : MonoBehaviour
                 rgbody = gameObject.GetComponent<Rigidbody2D>();
             }
             
-            IPScript.couldBuy = true;  
+            InputManager.Instance.couldBuy = true;  
 
-            if(onMouse && !checkExceedWOEqual() && IVScript.getHovered() != -1 && (IVScript.getItem(IVScript.getHovered())[0] == type || IVScript.getItem(IVScript.getHovered())[0] == -1) && !IVScript.checkExceed(IVScript.getHovered()))
+            if(onMouse && !checkExceedWOEqual() && InventoryManager.Instance.getHovered() != -1 && (InventoryManager.Instance.getItem(InventoryManager.Instance.getHovered())[0] == type || InventoryManager.Instance.getItem(InventoryManager.Instance.getHovered())[0] == -1) && !InventoryManager.Instance.checkExceed(InventoryManager.Instance.getHovered()))
             {
-                int index = IVScript.getHovered();
-                float[] invenItem = IVScript.getItem(index);
-                IVScript.addItem(new float[]{type, storage + invenItem[1] * (float)Math.Pow(1000, invenItem[2] - storageM), storageM}, IVScript.getHovered());
-                IVScript.checkItem(index);
+                int index = InventoryManager.Instance.getHovered();
+                float[] invenItem = InventoryManager.Instance.getItem(index);
+                InventoryManager.Instance.addItem(new float[]{type, storage + invenItem[1] * (float)Math.Pow(1000, invenItem[2] - storageM), storageM}, InventoryManager.Instance.getHovered());
+                InventoryManager.Instance.checkItem(index);
                 Destroy(gameObject);
             }
 
@@ -334,24 +325,24 @@ public class Item : MonoBehaviour
 
                 if(hiveGrid.HasTile(cellPos))
                 {
-                    int index = HCScript.findHcPos(cellPos.x, cellPos.y);
+                    int index = HoneycombManager.Instance.findHcPos(cellPos.x, cellPos.y);
                     
-                    if(HCScript.getStorageHC(index, false)[0] == type || HCScript.getStorageHC(index, false)[0] == -1)
+                    if(HoneycombManager.Instance.getStorageHC(index, false)[0] == type || HoneycombManager.Instance.getStorageHC(index, false)[0] == -1)
                     {
                         switch(type)
                         {
                             case 0f:
-                                storage = HCScript.changeHoneyStorage(index, storage, (int)storageM);
+                                storage = HoneycombManager.Instance.changeHoneyStorage(index, storage, (int)storageM);
                                 break;
                             case 1f:
-                                storage = HCScript.changeNectarStorage(index, storage, (int)storageM);
+                                storage = HoneycombManager.Instance.changeNectarStorage(index, storage, (int)storageM);
                                 break;
                             case 2f:
-                                storage = HCScript.changePollenStorage(index, storage, (int)storageM);
+                                storage = HoneycombManager.Instance.changePollenStorage(index, storage, (int)storageM);
                                 break;
                         }
 
-                        HCScript.drawTile(index);
+                        HoneycombManager.Instance.drawTile(index);
                         
                         if(storage <= 0f)
                         {
@@ -368,7 +359,7 @@ public class Item : MonoBehaviour
             }
         }
         
-        if(location.Equals(RMScript.GetCurrentRoom()))
+        if(location.Equals(RoomManager.Instance.GetCurrentRoom()))
         {
             if(gameObject.GetComponent<Rigidbody2D>() == null)
             {
@@ -383,8 +374,8 @@ public class Item : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, -3.46f, 0);
             Destroy(rgbody);
-            IPScript.couldBuy = true;
-            gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            InputManager.Instance.couldBuy = true;
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
             valueText.gameObject.SetActive(false);
         }
     }

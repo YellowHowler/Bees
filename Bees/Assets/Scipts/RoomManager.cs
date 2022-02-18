@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomManager : MonoBehaviour
+public class RoomManager : Singleton<RoomManager>
 {
     [SerializeField] GameObject StorageGrid;
     [SerializeField] GameObject GardenGrid;
     [SerializeField] GameObject HiveBGGrid;
     [SerializeField] GameObject Transition;
-    [SerializeField] GameObject CameraManager;
 
-    CameraManager CMScript;
 
     Camera camera;
 
@@ -19,7 +17,6 @@ public class RoomManager : MonoBehaviour
     private float temp;
     void Awake()
     {
-        CMScript = CameraManager.GetComponent<CameraManager>();
         camera = Camera.main;
         StorageGrid.SetActive(true);
         SetCurrentRoom("Storage");
@@ -28,7 +25,7 @@ public class RoomManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
-        temp = CMScript.getTemp();
+        temp = CameraManager.Instance.getTemp();
     }
 
     public string GetCurrentRoom() { return currentRoom; }
@@ -38,6 +35,40 @@ public class RoomManager : MonoBehaviour
         Instantiate(Transition);
 
         currentRoom = name; 
+
+        CameraManager.Instance.RoomChange();
+
+        if(name.Equals("Storage"))
+        {
+            StorageGrid.SetActive(true);
+            HiveBGGrid.SetActive(true);
+            GardenGrid.SetActive(false);
+            camera.transform.position = new Vector3(1.8f, 0, -10);
+            Debug.Log("storage");
+        }
+        else if(name.Equals("Machinery"))
+        {
+            StorageGrid.SetActive(false);
+            HiveBGGrid.SetActive(true);
+            GardenGrid.SetActive(false);
+            camera.transform.position = new Vector3(1.8f, 0, -10);
+        }
+        else if(name.Equals("Garden"))
+        {
+            StorageGrid.SetActive(false);
+            HiveBGGrid.SetActive(false);
+            GardenGrid.SetActive(true);
+            camera.transform.position = new Vector3(temp, 6, -10);
+        }
+    }
+
+    public void SetCurrentRoom(string name, bool stopFollow) 
+    {
+        Instantiate(Transition);
+
+        currentRoom = name; 
+
+        if(stopFollow) CameraManager.Instance.RoomChange();
 
         if(name.Equals("Storage"))
         {

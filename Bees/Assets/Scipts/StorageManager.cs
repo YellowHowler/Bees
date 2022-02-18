@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StorageManager : MonoBehaviour
+public class StorageManager : Singleton<StorageManager>
 {
     [SerializeField] Text honeyText;
     [SerializeField] Text nectarText;

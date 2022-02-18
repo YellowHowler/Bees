@@ -9,18 +9,7 @@ public class QueenBeeManager : MonoBehaviour
 {
     [SerializeField] GameObject beeObj;
     [SerializeField] Slider eggSlider;
-
-    GameObject RoomManager;
-    GameObject HiveManager;
-    GameObject HiveBGManager;
-    GameObject FlowerManager;
-    GameObject StorageManager;
-
-    RoomManager RMScript;
-    HiveBGManager HVBGScript;
-    FlowerManager FLScript;
-    HoneycombManager HCScript;
-    StorageManager SMScript;
+    [SerializeField] GameObject eggReadySign;
 
     Renderer rd;
     Animator ani;
@@ -52,26 +41,19 @@ public class QueenBeeManager : MonoBehaviour
     private float right;
     private float up;
     private float down;
-    private float offset = 4f;
+    private float offset = 3.8f;
+
+    private bool movingRandom = true;
+
+    private bool eggReady = false;
+    private float eggPrepareTime = 3f; //seconds
 
     void Awake()
     {
-        RoomManager = GameObject.FindWithTag("RM");
-        HiveBGManager = GameObject.FindWithTag("HVBG");
-        FlowerManager = GameObject.FindWithTag("FL");
-        HiveManager = GameObject.FindWithTag("HC");
-        StorageManager = GameObject.FindWithTag("SM");
-
         BGTemp = GameObject.FindWithTag("BGTemp").GetComponent<Tilemap>();
 
         rd = beeObj.GetComponent<Renderer>();
         ani = beeObj.GetComponent<Animator>();
-
-        RMScript = RoomManager.GetComponent<RoomManager>();
-        HVBGScript = HiveBGManager.GetComponent<HiveBGManager>();
-        FLScript = FlowerManager.GetComponent<FlowerManager>();
-        HCScript = HiveManager.GetComponent<HoneycombManager>();
-        SMScript = StorageManager.GetComponent<StorageManager>();
 
         location = "Storage";
 
@@ -80,19 +62,19 @@ public class QueenBeeManager : MonoBehaviour
 
     void Start()
     {
-        exitPos = HVBGScript.getExitPos();
+        exitPos = HiveBGManager.Instance.getExitPos();
         
         ani.SetBool("isStopped", false);
         
-        left = BGTemp.GetCellCenterWorld(new Vector3Int(HCScript.getLeft(), 0, 0)).x + offset + 1f;
-        right = BGTemp.GetCellCenterWorld(new Vector3Int(HCScript.getRight(), 0, 0)).x - offset - 1f;
-        up = BGTemp.GetCellCenterWorld(new Vector3Int(0, HCScript.getUp(), 0)).y + offset;
-        down = BGTemp.GetCellCenterWorld(new Vector3Int(0, HCScript.getDown(), 0)).y - offset;
-
-        Debug.Log("left: " + left + "\n" + "right: " + right + "\n" + "up: " + up + "\n" + "down: " + down + "\n");
+        left = BGTemp.GetCellCenterWorld(new Vector3Int(HoneycombManager.Instance.getLeft(), 0, 0)).x + offset + 2.5f;
+        right = BGTemp.GetCellCenterWorld(new Vector3Int(HoneycombManager.Instance.getRight(), 0, 0)).x - offset - 2.5f;
+        up = BGTemp.GetCellCenterWorld(new Vector3Int(0, HoneycombManager.Instance.getUp(), 0)).y + offset + 1.5f;
+        down = BGTemp.GetCellCenterWorld(new Vector3Int(0, HoneycombManager.Instance.getDown(), 0)).y - offset + 0.5f;
 
         setDestination(new Vector3(Random.Range(left, right), Random.Range(down, up), 0));
-        startMoveRandom();
+        startMoveRandom(); 
+
+        StartCoroutine("PrepareEgg");
     }
 
     private void hide()
@@ -100,10 +82,20 @@ public class QueenBeeManager : MonoBehaviour
         if(location.Equals(currentRoom))
         {
             rd.enabled = true;
+            gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            if(eggReady)
+            {
+                eggReadySign.SetActive(true);
+            }
+            else{
+                eggReadySign.SetActive(false);
+            }
         }
         else
         {
             rd.enabled = false;
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            eggReadySign.SetActive(false);
         }
     }
 
@@ -114,8 +106,16 @@ public class QueenBeeManager : MonoBehaviour
 
     void Update()
     {
-        currentRoom = RMScript.GetCurrentRoom();
+        currentRoom = RoomManager.Instance.GetCurrentRoom();
         hide();
+    }
+
+    private void OnMouseOver()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            CameraManager.Instance.FollowBee(gameObject);
+        }
     }
     void move(Vector3 endPos)
     {
@@ -129,7 +129,7 @@ public class QueenBeeManager : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion angleAxis = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
         Quaternion rotation = Quaternion.Slerp(transform.rotation, angleAxis, 100f);
-        transform.rotation = rotation;
+        beeObj.transform.rotation = rotation;
         
         transform.position = Vector3.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
     }
@@ -139,9 +139,13 @@ public class QueenBeeManager : MonoBehaviour
         destination = newDes;
     }
 
+    private void setEggReady(bool newEgg)
+    {
+        eggReady = newEgg;
+    }
     IEnumerator MoveRandom()
     {
-        while(true)
+        while(movingRandom)
         {
             moveSpeed = 2f;
 
@@ -158,5 +162,12 @@ public class QueenBeeManager : MonoBehaviour
             Debug.Log("move");
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    IEnumerator PrepareEgg()
+    {
+        yield return new WaitForSeconds(eggPrepareTime);
+        setEggReady(true);
+        yield break; 
     }
 }

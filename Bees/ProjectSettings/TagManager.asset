@@ -90,6 +90,9 @@ TagManager:
   - name: Bee
     uniqueID: 3886803069
     locked: 0
+  - name: QueenBeeIcon
+    uniqueID: 3189365057
+    locked: 0
   - name: ClickIcon
     uniqueID: 547931365
     locked: 0

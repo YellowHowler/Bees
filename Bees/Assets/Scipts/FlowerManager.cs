@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEditor;
 
-public class FlowerManager : MonoBehaviour
+public class FlowerManager : Singleton<FlowerManager>
 {
     [SerializeField] Tilemap FlowerGrid;
     [SerializeField] Tilemap FlowerGridTemp;

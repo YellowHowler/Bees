@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEditor;
 
-public class HoneycombManager : MonoBehaviour
+public class HoneycombManager : Singleton<HoneycombManager>
 {
     [SerializeField] Tilemap hiveGrid;
     [SerializeField] Tilemap buyGrid;
@@ -19,16 +19,8 @@ public class HoneycombManager : MonoBehaviour
     [SerializeField] Tile buyTileEmpty;
     [SerializeField] GameObject HCPriceObj;
     [SerializeField] GameObject HCPriceTxtObj;
-    [SerializeField] GameObject StorageManager;
-    [SerializeField] GameObject InputManager;
-    [SerializeField] GameObject BGManager;
-    [SerializeField] GameObject CameraManager;
 
     BuyHoneycombText HCPriceTxt;
-    StorageManager SMScript;
-    InputManager IPScript;
-    HiveBGManager BGScript;
-    CameraManager CMScript;
 
     private Vector3Int mouseTilePos;
 
@@ -78,15 +70,15 @@ public class HoneycombManager : MonoBehaviour
     
     private void getStorage()
     {
-        honey = SMScript.getHoney();
-        nectar = SMScript.getNectar();
-        pollen = SMScript.getPollen();
-        wax = SMScript.getWax();
+        honey = StorageManager.Instance.getHoney();
+        nectar = StorageManager.Instance.getNectar();
+        pollen = StorageManager.Instance.getPollen();
+        wax = StorageManager.Instance.getWax();
 
-        honeyM = SMScript.getHoneyM();
-        nectarM = SMScript.getNectarM();
-        pollenM = SMScript.getPollenM();
-        waxM = SMScript.getWaxM();
+        honeyM = StorageManager.Instance.getHoneyM();
+        nectarM = StorageManager.Instance.getNectarM();
+        pollenM = StorageManager.Instance.getPollenM();
+        waxM = StorageManager.Instance.getWaxM();
     }
 
     public float getHCPrice() { return HCPrice; }
@@ -103,10 +95,6 @@ public class HoneycombManager : MonoBehaviour
 
 
         HCPriceTxt = HCPriceTxtObj.GetComponent<BuyHoneycombText>();
-        SMScript = StorageManager.GetComponent<StorageManager>();
-        IPScript = InputManager.GetComponent<InputManager>();
-        BGScript = BGManager.GetComponent<HiveBGManager>();
-        CMScript = CameraManager.GetComponent<CameraManager>();
 
         hcPos = new List<int[]>();
         honeyStorage = new List<float>();
@@ -148,7 +136,7 @@ public class HoneycombManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouseTilePos = IPScript.getMouseTilePos();
+        mouseTilePos = InputManager.Instance.getMouseTilePos();
     }
 
     private float[] round(float value, float valueM)
@@ -290,10 +278,10 @@ public class HoneycombManager : MonoBehaviour
                 waxM--;
             }
 
-            SMScript.setWax(wax, waxM);
-            SMScript.changeText();
+            StorageManager.Instance.setWax(wax, waxM);
+            StorageManager.Instance.changeText();
 
-            BGScript.setupBG();
+            HiveBGManager.Instance.setupBG();
 
             if(mouseTilePos.x < left) left = mouseTilePos.x;
             else if(mouseTilePos.x > right) right = mouseTilePos.x;
@@ -302,11 +290,10 @@ public class HoneycombManager : MonoBehaviour
 
             Debug.Log(right + " " + left + " " + up + " " + down);
 
-            BGScript.GetDirection();
-            BGScript.setupBG();
-            CMScript.setBound();
+            HiveBGManager.Instance.GetDirection();
+            HiveBGManager.Instance.setupBG();
+            CameraManager.Instance.setBound();
 
-            //SMScript.setWax();
             setupHC();
         }
     }
@@ -328,9 +315,9 @@ public class HoneycombManager : MonoBehaviour
         if(honeyCapacityM < honeyStorageM[index] || (honeyCapacityM == honeyStorageM[index] && honeyCapacity < honeyStorage[index]))
         {
             Debug.Log("full");
-            SMScript.setHoney(SMScript.getHoney() + honey * (float)Math.Pow(1000, -SMScript.getHoneyM() + honeyM), SMScript.getHoneyM());
+            StorageManager.Instance.setHoney(StorageManager.Instance.getHoney() + honey * (float)Math.Pow(1000, -StorageManager.Instance.getHoneyM() + honeyM), StorageManager.Instance.getHoneyM());
             float returnValue = (honeyStorage[index] - honeyCapacity * (float)Math.Pow(1000, honeyCapacityM - honeyStorageM[index])) * (float)Math.Pow(1000, honeyStorageM[index] - honeyM);
-            SMScript.setHoney(SMScript.getHoney() - returnValue * (float)Math.Pow(1000, -SMScript.getHoneyM()), SMScript.getHoneyM());
+            StorageManager.Instance.setHoney(StorageManager.Instance.getHoney() - returnValue * (float)Math.Pow(1000, -StorageManager.Instance.getHoneyM()), StorageManager.Instance.getHoneyM());
 
             honeyStorage[index] = honeyCapacity;
             honeyStorageM[index] = honeyCapacityM;
@@ -340,7 +327,7 @@ public class HoneycombManager : MonoBehaviour
             return returnValue;
         }
 
-        SMScript.setHoney(SMScript.getHoney() + honey * (float)Math.Pow(1000, -SMScript.getHoneyM() + honeyM), SMScript.getHoneyM());
+        StorageManager.Instance.setHoney(StorageManager.Instance.getHoney() + honey * (float)Math.Pow(1000, -StorageManager.Instance.getHoneyM() + honeyM), StorageManager.Instance.getHoneyM());
         drawTile(index);
         return 0;
     }
@@ -362,9 +349,9 @@ public class HoneycombManager : MonoBehaviour
         if(nectarCapacityM < nectarStorageM[index] || (nectarCapacityM == nectarStorageM[index] && nectarCapacity < nectarStorage[index]))
         {
             Debug.Log("full");
-            SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarM), SMScript.getNectarM());
+            StorageManager.Instance.setNectar(StorageManager.Instance.getNectar() + nectar * (float)Math.Pow(1000, -StorageManager.Instance.getNectarM() + nectarM), StorageManager.Instance.getNectarM());
             float returnValue = (nectarStorage[index] - nectarCapacity * (float)Math.Pow(1000, nectarCapacityM - nectarStorageM[index])) * (float)Math.Pow(1000, nectarStorageM[index] - nectarM);
-            SMScript.setNectar(SMScript.getNectar() - returnValue * (float)Math.Pow(1000, -SMScript.getNectarM()), SMScript.getNectarM());
+            StorageManager.Instance.setNectar(StorageManager.Instance.getNectar() - returnValue * (float)Math.Pow(1000, -StorageManager.Instance.getNectarM()), StorageManager.Instance.getNectarM());
 
             nectarStorage[index] = nectarCapacity;
             nectarStorageM[index] = nectarCapacityM;
@@ -374,7 +361,7 @@ public class HoneycombManager : MonoBehaviour
             return returnValue;
         }
 
-        SMScript.setNectar(SMScript.getNectar() + nectar * (float)Math.Pow(1000, -SMScript.getNectarM() + nectarM), SMScript.getNectarM());
+        StorageManager.Instance.setNectar(StorageManager.Instance.getNectar() + nectar * (float)Math.Pow(1000, -StorageManager.Instance.getNectarM() + nectarM), StorageManager.Instance.getNectarM());
         drawTile(index);
         return 0;
     }
@@ -409,9 +396,9 @@ public class HoneycombManager : MonoBehaviour
         if(pollenCapacityM < pollenStorageM[index] || (pollenCapacityM == pollenStorageM[index] && pollenCapacity < pollenStorage[index]))
         {
             Debug.Log("full");
-            SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenM), SMScript.getPollenM());
+            StorageManager.Instance.setPollen(StorageManager.Instance.getPollen() + pollen * (float)Math.Pow(1000, -StorageManager.Instance.getPollenM() + pollenM), StorageManager.Instance.getPollenM());
             float returnValue = (pollenStorage[index] - pollenCapacity * (float)Math.Pow(1000, pollenCapacityM - pollenStorageM[index])) * (float)Math.Pow(1000, pollenStorageM[index] - pollenM);
-            SMScript.setPollen(SMScript.getPollen() - returnValue * (float)Math.Pow(1000, -SMScript.getPollenM()), SMScript.getPollenM());
+            StorageManager.Instance.setPollen(StorageManager.Instance.getPollen() - returnValue * (float)Math.Pow(1000, -StorageManager.Instance.getPollenM()), StorageManager.Instance.getPollenM());
 
             pollenStorage[index] = pollenCapacity;
             pollenStorageM[index] = pollenCapacityM;
@@ -421,7 +408,7 @@ public class HoneycombManager : MonoBehaviour
             return returnValue;
         }
 
-        SMScript.setPollen(SMScript.getPollen() + pollen * (float)Math.Pow(1000, -SMScript.getPollenM() + pollenM), SMScript.getPollenM());
+        StorageManager.Instance.setPollen(StorageManager.Instance.getPollen() + pollen * (float)Math.Pow(1000, -StorageManager.Instance.getPollenM() + pollenM), StorageManager.Instance.getPollenM());
 
         drawTile(index);
         return 0;

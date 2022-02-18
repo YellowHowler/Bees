@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEditor;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField] GameObject[] inventory;
     [SerializeField] Sprite[] itemImages;
@@ -14,9 +14,6 @@ public class InventoryManager : MonoBehaviour
     GameObject[] select;
     GameObject[] itemSlot;
     Text[] itemValue;
-
-    RoomManager RMScript;
-    HoneycombManager HCScript;
 
     private float[][] items; //{type, value, valueM}
     
@@ -27,9 +24,6 @@ public class InventoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RMScript = GameObject.FindWithTag("RM").GetComponent<RoomManager>();
-        HCScript = GameObject.FindWithTag("HC").GetComponent<HoneycombManager>();
-
         select = new GameObject[slotNum];
         itemSlot = new GameObject[slotNum];
         itemValue = new Text[slotNum];
@@ -58,9 +52,9 @@ public class InventoryManager : MonoBehaviour
             select[i].SetActive(i == selected || i == hovered);
         }
 
-        if(Input.GetMouseButtonDown(0) && hovered >= 0)
+        if(Input.GetMouseButtonDown(0) && hovered >= 0 && RoomManager.Instance.GetCurrentRoom().Equals("Storage"))
         {
-            if(items[hovered][1] >= 0)
+            if(items[hovered][1] >= 0);
             {
                 float spawnYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y + 1;
                 Vector3 spawnPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, spawnYPos, 0);
@@ -123,42 +117,42 @@ public class InventoryManager : MonoBehaviour
             switch(items[index][0])
             {
                 case 0f:
-                    if(items[index][2] > HCScript.honeyCapacityM || (items[index][2] == HCScript.honeyCapacityM && items[index][1] > HCScript.honeyCapacity))
+                    if(items[index][2] > HoneycombManager.Instance.honeyCapacityM || (items[index][2] == HoneycombManager.Instance.honeyCapacityM && items[index][1] > HoneycombManager.Instance.honeyCapacity))
                     {
                         float save = items[index][1];
                         float saveM = items[index][2];
 
-                        items[index][1] = HCScript.honeyCapacity;
-                        items[index][2] = HCScript.honeyCapacityM;
+                        items[index][1] = HoneycombManager.Instance.honeyCapacity;
+                        items[index][2] = HoneycombManager.Instance.honeyCapacityM;
                 
                         GameObject newItem = Instantiate(item, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HCScript.honeyCapacity * (float)Math.Pow(1000, HCScript.honeyCapacityM - saveM), items[index][2]}, RMScript.GetCurrentRoom());
+                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HoneycombManager.Instance.honeyCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.honeyCapacityM - saveM), items[index][2]}, RoomManager.Instance.GetCurrentRoom());
                     }
                     break;
                 case 1f:
-                    if(items[index][2] > HCScript.nectarCapacityM || (items[index][2] == HCScript.nectarCapacityM && items[index][1] > HCScript.nectarCapacity))
+                    if(items[index][2] > HoneycombManager.Instance.nectarCapacityM || (items[index][2] == HoneycombManager.Instance.nectarCapacityM && items[index][1] > HoneycombManager.Instance.nectarCapacity))
                     {
                         float save = items[index][1];
                         float saveM = items[index][2];
 
-                        items[index][1] = HCScript.nectarCapacity;
-                        items[index][2] = HCScript.nectarCapacityM;
+                        items[index][1] = HoneycombManager.Instance.nectarCapacity;
+                        items[index][2] = HoneycombManager.Instance.nectarCapacityM;
                 
                         GameObject newItem = Instantiate(item, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HCScript.nectarCapacity * (float)Math.Pow(1000, HCScript.nectarCapacityM - saveM), items[index][2]}, RMScript.GetCurrentRoom());
+                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HoneycombManager.Instance.nectarCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.nectarCapacityM - saveM), items[index][2]}, RoomManager.Instance.GetCurrentRoom());
                     }
                     break;
                 case 2f:
-                    if(items[index][2] > HCScript.pollenCapacityM || (items[index][2] == HCScript.pollenCapacityM && items[index][1] > HCScript.pollenCapacity))
+                    if(items[index][2] > HoneycombManager.Instance.pollenCapacityM || (items[index][2] == HoneycombManager.Instance.pollenCapacityM && items[index][1] > HoneycombManager.Instance.pollenCapacity))
                     {
                         float save = items[index][1];
                         float saveM = items[index][2];
 
-                        items[index][1] = HCScript.pollenCapacity;
-                        items[index][2] = HCScript.pollenCapacityM;
+                        items[index][1] = HoneycombManager.Instance.pollenCapacity;
+                        items[index][2] = HoneycombManager.Instance.pollenCapacityM;
                 
                         GameObject newItem = Instantiate(item, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HCScript.pollenCapacity * (float)Math.Pow(1000, HCScript.pollenCapacityM - saveM), items[index][2]}, RMScript.GetCurrentRoom());
+                        newItem.GetComponent<Item>().setItem(new float[]{items[index][0], save - HoneycombManager.Instance.pollenCapacity * (float)Math.Pow(1000, HoneycombManager.Instance.pollenCapacityM - saveM), items[index][2]}, RoomManager.Instance.GetCurrentRoom());
                     }
                     break;
             }
@@ -172,19 +166,19 @@ public class InventoryManager : MonoBehaviour
         switch(items[index][0])
         {
             case 0f:
-                if(items[index][2] > HCScript.honeyCapacityM || (items[index][2] == HCScript.honeyCapacityM && items[index][1] > HCScript.honeyCapacity))
+                if(items[index][2] > HoneycombManager.Instance.honeyCapacityM || (items[index][2] == HoneycombManager.Instance.honeyCapacityM && items[index][1] > HoneycombManager.Instance.honeyCapacity))
                 {
                     return true;
                 }
                 break;
             case 1f:
-                if(items[index][2] > HCScript.nectarCapacityM || (items[index][2] == HCScript.nectarCapacityM && items[index][1] > HCScript.nectarCapacity))
+                if(items[index][2] > HoneycombManager.Instance.nectarCapacityM || (items[index][2] == HoneycombManager.Instance.nectarCapacityM && items[index][1] > HoneycombManager.Instance.nectarCapacity))
                 {
                     return true;
                 }
                 break;
             case 2f:
-                if(items[index][2] > HCScript.pollenCapacityM || (items[index][2] == HCScript.pollenCapacityM && items[index][1] > HCScript.pollenCapacity))
+                if(items[index][2] > HoneycombManager.Instance.pollenCapacityM || (items[index][2] == HoneycombManager.Instance.pollenCapacityM && items[index][1] > HoneycombManager.Instance.pollenCapacity))
                 {
                     return true;
                 }
