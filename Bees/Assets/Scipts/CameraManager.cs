@@ -43,6 +43,7 @@ public class CameraManager : Singleton<CameraManager>
     private int gardenRight;
 
     private bool isFollowing = false;
+    public bool followingQueen = false;
     public GameObject followingObj{get;set;}
 
     float temp;
