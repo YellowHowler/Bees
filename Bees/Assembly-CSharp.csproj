@@ -40,6 +40,7 @@
      <Compile Include="Assets/Scipts/InventoryManager.cs" />
      <Compile Include="Assets/Scipts/BuyHoneycombText.cs" />
      <Compile Include="Assets/Scipts/RoomButtomManager.cs" />
+     <Compile Include="Assets/Scipts/HCHoveredHide.cs" />
      <Compile Include="Assets/Scipts/InputManager.cs" />
      <Compile Include="Assets/Scipts/Transition.cs" />
      <Compile Include="Assets/Scipts/CameraBoundary.cs" />
@@ -58,7 +59,6 @@
      <Compile Include="Assets/Scipts/FlowerManager.cs" />
      <Compile Include="Assets/Scipts/Item.cs" />
      <Compile Include="Assets/Scipts/StorageManager.cs" />
-     <Compile Include="Assets/Scipts/HCHoveredHide.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.20f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -724,6 +724,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UniRx.csproj">
+      <Project>{7ec3b04f-300d-40d8-3d07-a03dfa84ec0a}</Project>
+      <Name>UniRx</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
