@@ -5,11 +5,13 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEditor;
 
-public class QueenBeeManager : MonoBehaviour
+public class QueenBeeManager : Singleton<QueenBeeManager>
 {
     [SerializeField] GameObject beeObj;
     [SerializeField] Slider eggSlider;
     [SerializeField] GameObject eggReadySign;
+    [SerializeField] Tilemap HCGrid;
+    [SerializeField] Button guideQueenButton;
 
     Renderer rd;
     Animator ani;
@@ -43,14 +45,18 @@ public class QueenBeeManager : MonoBehaviour
     private float down;
     private float offset = 3.8f;
 
-    private bool movingRandom = true;
 
+    private bool guidingQueen = false;
+    private bool movingRandom = true;
     private bool eggReady = false;
     private float eggPrepareTime = 3f; //seconds
+
+    private Vector3 prevMousePos;
 
     void Awake()
     {
         BGTemp = GameObject.FindWithTag("BGTemp").GetComponent<Tilemap>();
+        prevMousePos = new Vector3(0, 0, 0);
 
         rd = beeObj.GetComponent<Renderer>();
         ani = beeObj.GetComponent<Animator>();
@@ -70,6 +76,8 @@ public class QueenBeeManager : MonoBehaviour
         right = BGTemp.GetCellCenterWorld(new Vector3Int(HoneycombManager.Instance.getRight(), 0, 0)).x - offset - 2.5f;
         up = BGTemp.GetCellCenterWorld(new Vector3Int(0, HoneycombManager.Instance.getUp(), 0)).y + offset + 1.5f;
         down = BGTemp.GetCellCenterWorld(new Vector3Int(0, HoneycombManager.Instance.getDown(), 0)).y - offset + 0.5f;
+
+        guideQueenButton.gameObject.SetActive(false);
 
         setDestination(new Vector3(Random.Range(left, right), Random.Range(down, up), 0));
         startMoveRandom(); 
@@ -108,14 +116,78 @@ public class QueenBeeManager : MonoBehaviour
     {
         currentRoom = RoomManager.Instance.GetCurrentRoom();
         hide();
+
+        if(guidingQueen)
+        {
+            Vector3Int goalTilePos = HCGrid.WorldToCell(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
+            if(Input.GetMouseButtonDown(0) && HCGrid.HasTile(goalTilePos))
+            {
+                setDestination(HCGrid.GetCellCenterWorld(goalTilePos));
+            }
+        
+        }
+
+        if(transform.position != destination)
+        {
+            ani.SetBool("isStopped", false);
+            move(destination);
+        }
+        else
+        {
+            ani.SetBool("isStopped", true);
+        }
     }
 
-    private void OnMouseOver()
+    public void GuideQueen()
     {
-        if(Input.GetMouseButtonDown(0))
+        guideQueenButton.interactable = true;
+        setDestination(transform.position);
+        guidingQueen = true;
+
+        ani.SetBool("isStopped", true);
+        movingRandom = false;
+
+        
+        //LookMouse();
+    }
+
+    public void stopFollow()
+    {
+        guideQueenButton.gameObject.SetActive(false);
+    }
+
+    private void LookMouse()
+    {
+        Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+
+        if(mousePos != prevMousePos)
         {
-            CameraManager.Instance.FollowBee(gameObject);
+            ani.SetBool("isStopped", false);
+
+            Vector2 direction = new Vector2(
+            transform.position.x - mousePos.x,
+            transform.position.y - mousePos.y
+            );
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion angleAxis = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+            Quaternion rotation = Quaternion.Slerp(transform.rotation, angleAxis, 100f);
+            beeObj.transform.rotation = rotation;
+
         }
+        else{
+            ani.SetBool("isStopped", true);
+        }
+
+        prevMousePos = mousePos;
+    }
+
+    private void OnMouseDown()
+    {
+        guideQueenButton.gameObject.SetActive(true);
+
+        
+        CameraManager.Instance.FollowBee(gameObject);
     }
     void move(Vector3 endPos)
     {
@@ -145,21 +217,29 @@ public class QueenBeeManager : MonoBehaviour
     }
     IEnumerator MoveRandom()
     {
-        while(movingRandom)
+        while(true)
         {
             moveSpeed = 2f;
 
-            if(transform.position == destination)
+            if(transform.position == destination && movingRandom)
             {
-                ani.SetBool("isStopped", true);
-                yield return new WaitForSeconds(Random.Range(0.7f, 4f));
-                setDestination(new Vector3(Random.Range(left, right), Random.Range(down, up), 0));
-                Debug.Log("destination: " + destination);
-                ani.SetBool("isStopped", false);
+                //ani.SetBool("isStopped", true);
+                if(movingRandom) 
+                {
+                    yield return new WaitForSeconds(Random.Range(0.7f, 4f));
+                
+                    setDestination(new Vector3(Random.Range(left, right), Random.Range(down, up), 0));
+                    Debug.Log("destination: " + destination);
+                    //ani.SetBool("isStopped", false);
+                }
             }
 
-            move(destination);
-            Debug.Log("move");
+            
+            // if(movingRandom)
+            // {
+            //     move(destination);
+            //     Debug.Log("move");
+            // }
             yield return new WaitForFixedUpdate();
         }
     }

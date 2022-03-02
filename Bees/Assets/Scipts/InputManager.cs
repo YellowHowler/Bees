@@ -117,7 +117,7 @@ public class InputManager : Singleton<InputManager>
             {
                 HCPriceObj.SetActive(false);
             }
-            if(hiveGrid.HasTile(mouseTilePos))
+            if(hiveGrid.HasTile(mouseTilePos) && CameraManager.Instance.followingQueen)
             {
                 HCHovered.GetComponent<SpriteRenderer>().enabled = true;
                 HCHovered.transform.position = BGGrid.GetCellCenterWorld(mouseTilePos);

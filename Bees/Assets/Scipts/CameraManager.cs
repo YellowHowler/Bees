@@ -17,7 +17,7 @@ public class CameraManager : Singleton<CameraManager>
     private Vector3 bgZeroPos;
 
     public float horizontalResolution = 1920f;
-    public float ScrollSpeed = 0.3f;
+    public float ScrollSpeed = 0.2f;
     private int hcNum;
     float currentAspect;
     float cameraSize;
@@ -104,25 +104,29 @@ public class CameraManager : Singleton<CameraManager>
         }
         if(RoomManager.Instance.GetCurrentRoom().Equals("Storage"))
         {
-            if ( Input.mousePosition.x >= Screen.width * 0.96 && camera.transform.position.x < rightBound + offSetX)
+            if ( Input.mousePosition.x >= Screen.width * 0.98 && camera.transform.position.x < rightBound + offSetX)
             {
                 camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
-            else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBound - offSetX)
+            else if ( Input.mousePosition.x <= Screen.width * 0.02 && camera.transform.position.x > leftBound - offSetX)
             {
                 camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
-            if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBound + offSetY)
+            if ( Input.mousePosition.y >= Screen.height * 0.98 && camera.transform.position.y < upBound + offSetY)
             {
                 camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
-            else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBound - offSetY)
+            else if ( Input.mousePosition.y <= Screen.height * 0.02 && camera.transform.position.y > downBound - offSetY)
             {
                 camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
         }  
         else if(RoomManager.Instance.GetCurrentRoom().Equals("Garden"))
@@ -131,22 +135,26 @@ public class CameraManager : Singleton<CameraManager>
             {
                 camera.transform.Translate(Vector3.right * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
             else if ( Input.mousePosition.x <= Screen.width * 0.04 && camera.transform.position.x > leftBoundGarden - offSetX - 0.65f + temp)
             {
                 Debug.Log("left");
                 camera.transform.Translate(Vector3.left * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();            
             }
             if ( Input.mousePosition.y >= Screen.height * 0.96 && camera.transform.position.y < upBoundGarden + offSetY - 0.4f)
             {
                 camera.transform.Translate(Vector3.up * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
             else if ( Input.mousePosition.y <= Screen.height * 0.04 && camera.transform.position.y > downBoundGarden - offSetY)
             {
                 camera.transform.Translate(Vector3.down * Time.deltaTime * ScrollSpeed, Space.World);
                 isFollowing = false;
+                QueenBeeManager.Instance.stopFollow();
             }
         }   
     } 
@@ -157,6 +165,11 @@ public class CameraManager : Singleton<CameraManager>
         Debug.Log("follow");
         followingObj = follow;
         isFollowing = true;
+
+        if(follow.CompareTag("Queen"))
+        {
+            followingQueen = true;
+        }
     }
 
     public void RoomChange()
