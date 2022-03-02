@@ -12,10 +12,13 @@ public class QueenBeeManager : Singleton<QueenBeeManager>
     [SerializeField] GameObject eggReadySign;
     [SerializeField] Tilemap HCGrid;
     [SerializeField] Button guideQueenButton;
+    [SerializeField] GameObject dottedLineObj;
 
     Renderer rd;
     Animator ani;
     Tilemap BGTemp;
+
+    LineRenderer lr;
 
     private Vector3 destination;
     private Vector3 exitPos;
@@ -68,6 +71,7 @@ public class QueenBeeManager : Singleton<QueenBeeManager>
 
     void Start()
     {
+        lr = dottedLineObj.GetComponent<LineRenderer>();
         exitPos = HiveBGManager.Instance.getExitPos();
         
         ani.SetBool("isStopped", false);
@@ -136,11 +140,24 @@ public class QueenBeeManager : Singleton<QueenBeeManager>
         {
             ani.SetBool("isStopped", true);
         }
+
+        if(guidingQueen)
+        {
+            lr.enabled = true;
+            lr.SetPosition(0, transform.position);
+            lr.useWorldSpace = true;
+            Vector3 endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
+            lr.SetPosition(1, endPos);
+        }
+        else
+        {
+            lr.enabled = false;
+        }
     }
 
     public void GuideQueen()
     {
-        guideQueenButton.interactable = true;
+        guideQueenButton.interactable = false;
         setDestination(transform.position);
         guidingQueen = true;
 
@@ -185,7 +202,7 @@ public class QueenBeeManager : Singleton<QueenBeeManager>
     private void OnMouseDown()
     {
         guideQueenButton.gameObject.SetActive(true);
-
+        guideQueenButton.interactable = true;
         
         CameraManager.Instance.FollowBee(gameObject);
     }
