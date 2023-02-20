@@ -15,6 +15,7 @@ TagManager:
   - IV
   - BGTemp
   - Queen
+  - MCGrid
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Bee
   - Water
   - UI
-  - 
-  - 
+  - Item
+  - Ground
   - 
   - 
   - 
@@ -64,6 +65,9 @@ TagManager:
   - name: HoneyComb
     uniqueID: 2799264257
     locked: 0
+  - name: BuildGrid
+    uniqueID: 4210749939
+    locked: 0
   - name: HCPrice
     uniqueID: 1285608769
     locked: 0
@@ -87,6 +91,9 @@ TagManager:
     locked: 0
   - name: ItemValue
     uniqueID: 2937350513
+    locked: 0
+  - name: Guideline
+    uniqueID: 22207283
     locked: 0
   - name: Bee
     uniqueID: 3886803069
